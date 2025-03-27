@@ -1,6 +1,6 @@
 +++
 date = '2025-03-27T23:06:52+05:30'
-draft = true
+draft = false
 title = 'Test Hugo Theme'
 +++
 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Posts &middot; My New Hugo Site</title>
+  <title>Test Hugo Theme &middot; My New Hugo Site</title>
   <meta name="description" content="" />
 
   
@@ -24,7 +24,6 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="https://mnpoonia.github.io/posts/index.xml" rel="alternate" type="application/rss+xml" title="My New Hugo Site" />
   
 </head>
 
@@ -50,11 +49,35 @@
 </aside>
 
     <main class="content container">
-    <ul class="posts">
-<li>
-    <span><a href="https://mnpoonia.github.io/posts/test-hugo-theme/">Test Hugo Theme</a> <time class="pull-right post-list" datetime="2025-03-27T23:06:52&#43;0530">Thu, Mar 27, 2025</time></span>
-  </li>
+    <div class="post">
+  <h1>Test Hugo Theme</h1>
+  <time datetime=2025-03-27T23:06:52&#43;0530 class="post-date">Thu, Mar 27, 2025</time>
+  <p>To test a new Hugo theme here are the list of steps</p>
+<ul>
+<li>Find the right theme. For this example we will use the theme <code>hyde</code></li>
+<li>Use below git command to put theme in local theme directory
+<ul>
+<li>` git subtree add &ndash;prefix themes/hyde <a href="https://github.com/spf13/hyde.git">https://github.com/spf13/hyde.git</a> master &ndash;squash</li>
 </ul>
+</li>
+</ul>
+<p>This command will put the theme inside themes directory`</p>
+<ul>
+<li>
+<p>Change hugo.toml and add <code>theme = &quot;hyde&quot;</code></p>
+</li>
+<li>
+<p>Run hugo server &ndash;buildDrafts</p>
+</li>
+<li>
+<p>Open <a href="localhost:1313">localhost:1313</a></p>
+</li>
+</ul>
+<p>You should be able to see your site in new theme</p>
+
+</div>
+
+
     </main>
 
     
