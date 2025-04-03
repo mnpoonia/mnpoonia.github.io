@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Categories &middot; Aman Poonia</title>
+  <title>What is HFileLink and Reference in HBase? &middot; Aman Poonia</title>
   <meta name="description" content="" />
 
   
@@ -24,7 +24,6 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="https://mnpoonia.github.io/categories/index.xml" rel="alternate" type="application/rss+xml" title="Aman Poonia" />
   
 </head>
 
@@ -50,9 +49,29 @@
 </aside>
 
     <main class="content container">
-    <ul class="posts">
-
+    <div class="post">
+  <h1>What is HFileLink and Reference in HBase?</h1>
+  <time datetime=2025-04-03T18:44:47&#43;0530 class="post-date">Thu, Apr 3, 2025</time>
+  <p>In HBase there are two things that seems similar but are very different.
+<code>Links</code> and <code>References</code>. Names sound similar but they are not.</p>
+<p>Links - HFileLink is the implementation name for FileLink</p>
+<p><strong>HFileLink</strong> describes a link to hfile. It is more like a URL or path to the file. It means a hfile will be served regardless of its location being region directory or archive directory
+By default it will always look into the original location(region dir) defined by link name. If it doesn&rsquo;t find the file there it will fall back to archive directory.
+So this is helpful for snapshots. As snapshots is nothing but list of hfile links to original hfiles of table for which snapshot it taken.</p>
+<p><strong>Reference</strong><br>
+Reference is a hfile where the reference hfile refer to some(top or bottom) half of another hfile. This comes handy when we are doing splits or merges. In splits we don&rsquo;t need to copy whole data to new region. Infact new region is created and a reference hfile is created which points to top or bottom of original region hfile. And when it has to be read there is a special hfile reader that reads this type of hfile called HalfStoreFileReader. Eventually when compaction is trigerred data is copied to new region.</p>
+<p>Advantage</p>
+<ul>
+<li>Splits are fast</li>
 </ul>
+<p>Disadvantage</p>
+<ul>
+<li>Region can&rsquo;t split again until the reference file is deleted(as part of minor compaction).</li>
+</ul>
+
+</div>
+
+
     </main>
 
     

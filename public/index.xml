@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>My New Hugo Site</title>
+    <title>Aman Poonia</title>
     <link>https://mnpoonia.github.io/</link>
-    <description>Recent content on My New Hugo Site</description>
+    <description>Recent content on Aman Poonia</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 27 Mar 2025 23:06:52 +0530</lastBuildDate>
+    <lastBuildDate>Thu, 03 Apr 2025 18:44:47 +0530</lastBuildDate>
     <atom:link href="https://mnpoonia.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What is HFileLink and Reference in HBase?</title>
+      <link>https://mnpoonia.github.io/posts/hbase-link-reference-diff/</link>
+      <pubDate>Thu, 03 Apr 2025 18:44:47 +0530</pubDate>
+      <guid>https://mnpoonia.github.io/posts/hbase-link-reference-diff/</guid>
+      <description>&lt;p&gt;In HBase there are two things that seems similar but are very different.&#xA;&lt;code&gt;Links&lt;/code&gt; and &lt;code&gt;References&lt;/code&gt;. Names sound similar but they are not.&lt;/p&gt;&#xA;&lt;p&gt;Links - HFileLink is the implementation name for FileLink&lt;/p&gt;&#xA;&lt;p&gt;&lt;strong&gt;HFileLink&lt;/strong&gt; describes a link to hfile. It is more like a URL or path to the file. It means a hfile will be served regardless of its location being region directory or archive directory&#xA;By default it will always look into the original location(region dir) defined by link name. If it doesn&amp;rsquo;t find the file there it will fall back to archive directory.&#xA;So this is helpful for snapshots. As snapshots is nothing but list of hfile links to original hfiles of table for which snapshot it taken.&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Test Hugo Theme</title>
       <link>https://mnpoonia.github.io/posts/test-hugo-theme/</link>
       <pubDate>Thu, 27 Mar 2025 23:06:52 +0530</pubDate>
       <guid>https://mnpoonia.github.io/posts/test-hugo-theme/</guid>
       <description>&lt;p&gt;To test a new Hugo theme here are the list of steps&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Find the right theme. For this example we will use the theme &lt;code&gt;hyde&lt;/code&gt;&lt;/li&gt;&#xA;&lt;li&gt;Use below git command to put theme in local theme directory&#xA;&lt;ul&gt;&#xA;&lt;li&gt;` git subtree add &amp;ndash;prefix themes/hyde &lt;a href=&#34;https://github.com/spf13/hyde.git&#34;&gt;https://github.com/spf13/hyde.git&lt;/a&gt; master &amp;ndash;squash&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;This command will put the theme inside themes directory`&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Change hugo.toml and add &lt;code&gt;theme = &amp;quot;hyde&amp;quot;&lt;/code&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Run hugo server &amp;ndash;buildDrafts&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Open &lt;a href=&#34;localhost:1313&#34;&gt;localhost:1313&lt;/a&gt;&lt;/p&gt;&#xA;&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;p&gt;You should be able to see your site in new theme&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>My First Post</title>
-      <link>https://mnpoonia.github.io/posts/my-first-post/</link>
-      <pubDate>Thu, 27 Mar 2025 22:56:06 +0530</pubDate>
-      <guid>https://mnpoonia.github.io/posts/my-first-post/</guid>
-      <description></description>
     </item>
   </channel>
 </rss>

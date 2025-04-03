@@ -1,8 +1,14 @@
 baseURL = 'https://mnpoonia.github.io/'
 languageCode = 'en-us'
-title = 'My New Hugo Site'
+title = 'Aman Poonia'
 theme = "hyde"
 [caches]
   [caches.images]
     dir = ':cacheDir/images'
-
+[Menus]
+  main = [
+      {Name = "Github", URL = "https://github.com/mnpoonia/"},
+      {Name = "LinkedIn", URL = "https://www.linkedin.com/in/mnpoonia/"}
+  ]
+[params]
+  description = "Blog for self reference"

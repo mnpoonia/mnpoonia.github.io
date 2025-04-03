@@ -8,8 +8,8 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>My New Hugo Site</title>
-  <meta name="description" content="" />
+  <title>Aman Poonia</title>
+  <meta name="description" content="Blog for self reference" />
 
   
   <link type="text/css" rel="stylesheet" href="https://mnpoonia.github.io/css/print.css" media="print">
@@ -24,7 +24,7 @@
   <link rel="shortcut icon" href="/favicon.png">
 
   
-  <link href="https://mnpoonia.github.io/index.xml" rel="alternate" type="application/rss+xml" title="My New Hugo Site" />
+  <link href="https://mnpoonia.github.io/index.xml" rel="alternate" type="application/rss+xml" title="Aman Poonia" />
   
 </head>
 
@@ -32,16 +32,16 @@
   <aside class="sidebar">
   <div class="container sidebar-sticky">
     <div class="sidebar-about">
-      <a href="https://mnpoonia.github.io/"><h1>My New Hugo Site</h1></a>
+      <a href="https://mnpoonia.github.io/"><h1>Aman Poonia</h1></a>
       <p class="lead">
-      An elegant open source and mobile first theme for <a href="http://hugo.spf13.com">hugo</a> made by <a href="http://twitter.com/mdo">@mdo</a>. Originally made for Jekyll.
+       Blog for self reference 
       </p>
     </div>
 
     <nav>
       <ul class="sidebar-nav">
         <li><a href="https://mnpoonia.github.io/">Home</a> </li>
-        
+        <li><a href="https://github.com/mnpoonia/"> Github </a></li><li><a href="https://www.linkedin.com/in/mnpoonia/"> LinkedIn </a></li>
       </ul>
     </nav>
 
@@ -52,6 +52,22 @@
     <main class="content container">
     <div class="posts">
 <article class="post">
+  <h1 class="post-title">
+    <a href="https://mnpoonia.github.io/posts/hbase-link-reference-diff/">What is HFileLink and Reference in HBase?</a>
+  </h1>
+  <time datetime="2025-04-03T18:44:47&#43;0530" class="post-date">Thu, Apr 3, 2025</time>
+  <p>In HBase there are two things that seems similar but are very different.
+<code>Links</code> and <code>References</code>. Names sound similar but they are not.</p>
+<p>Links - HFileLink is the implementation name for FileLink</p>
+<p><strong>HFileLink</strong> describes a link to hfile. It is more like a URL or path to the file. It means a hfile will be served regardless of its location being region directory or archive directory
+By default it will always look into the original location(region dir) defined by link name. If it doesn&rsquo;t find the file there it will fall back to archive directory.
+So this is helpful for snapshots. As snapshots is nothing but list of hfile links to original hfiles of table for which snapshot it taken.</p>
+  
+  <div class="read-more-link">
+    <a href="/posts/hbase-link-reference-diff/">Read More…</a>
+  </div>
+  
+</article><article class="post">
   <h1 class="post-title">
     <a href="https://mnpoonia.github.io/posts/test-hugo-theme/">Test Hugo Theme</a>
   </h1>
@@ -82,13 +98,6 @@
   <div class="read-more-link">
     <a href="/posts/test-hugo-theme/">Read More…</a>
   </div>
-  
-</article><article class="post">
-  <h1 class="post-title">
-    <a href="https://mnpoonia.github.io/posts/my-first-post/">My First Post</a>
-  </h1>
-  <time datetime="2025-03-27T22:56:06&#43;0530" class="post-date">Thu, Mar 27, 2025</time>
-  
   
 </article>
 </div>
