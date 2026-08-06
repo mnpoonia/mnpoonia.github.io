@@ -1,0 +1,22 @@
+{
+  "name": "mnpoonia-github-io",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "npm run validate && astro build",
+    "preview": "astro preview",
+    "validate": "tsx scripts/validate-data.ts",
+    "import:ppqs-insecticides": "node scripts/import-ppqs-insecticides.mjs",
+    "test": "tsx --test src/lib/recommendations.test.ts"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@types/node": "^22.15.3",
+    "astro": "^5.7.10",
+    "pdfjs-dist": "^5.4.296",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3",
+    "zod": "^3.24.3"
+  }
+}

@@ -1,0 +1,29 @@
+---
+import { crops } from "../data/crop-protection";
+
+const currentPath = Astro.url.pathname;
+const isActive = (path: string) => currentPath === path || (path !== "/crop-protection/" && currentPath.startsWith(path));
+---
+<nav class="crop-nav" aria-label="Crop-protection navigation">
+  <div class="crop-nav-links">
+    <a class={isActive("/crop-protection/") && currentPath === "/crop-protection/" ? "active" : undefined} href="/crop-protection/">Overview</a>
+    <a class={isActive("/crop-protection/products/") ? "active" : undefined} href="/crop-protection/products/">Products</a>
+    <a class={isActive("/crop-protection/programs/") ? "active" : undefined} href="/crop-protection/programs/">Programs</a>
+    <a class={isActive("/crop-protection/assistant/") ? "active" : undefined} href="/crop-protection/assistant/">Assess</a>
+    <a class={isActive("/crop-protection/sources/") ? "active" : undefined} href="/crop-protection/sources/">Sources</a>
+  </div>
+  <label class="crop-nav-select" for="crop-navigation">
+    <span>Browse crop</span>
+    <select id="crop-navigation" data-crop-navigation>
+      <option value="">Select a crop</option>
+      {crops.map((crop) => <option value={`/crop-protection/crops/${crop.id}/`} selected={isActive(`/crop-protection/crops/${crop.id}/`)}>{crop.name}</option>)}
+    </select>
+  </label>
+</nav>
+<script is:inline>
+  const cropNavigation = document.querySelector("[data-crop-navigation]");
+  cropNavigation?.addEventListener("change", (event) => {
+    const path = event.currentTarget.value;
+    if (path) window.location.assign(path);
+  });
+</script>

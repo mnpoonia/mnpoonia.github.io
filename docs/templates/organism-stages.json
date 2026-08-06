@@ -1,0 +1,18 @@
+[
+  {
+    "id": "example-pest-adult",
+    "organismId": "example-pest",
+    "name": "Adult",
+    "kind": "life-stage",
+    "order": 1,
+    "whereToLook": "Plant part to inspect.",
+    "visibility": "Naked-eye or magnification guidance.",
+    "seasonality": "Geographic and seasonal scope, with limits.",
+    "imageStatus": "needed",
+    "imageNote": "Open-license or own image required.",
+    "identificationNotes": "Optional look-alikes and distinguishing features.",
+    "immediateAction": "What to inspect or record next.",
+    "managementEvidence": "Only source-backed stage-specific evidence, or an explicit evidence gap.",
+    "sourceIds": ["source-id-already-in-the-catalog"]
+  }
+]

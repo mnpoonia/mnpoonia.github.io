@@ -1,0 +1,58 @@
+---
+import { productSearchIndex } from "../data/crop-protection";
+
+const index = productSearchIndex();
+---
+<div class="combobox" data-product-lookup>
+  <label for="product-search"><strong>Search the catalog</strong><br /><span class="muted">Select a displayed product. Typed text is never used as product data.</span></label>
+  <input id="product-search" type="search" autocomplete="off" placeholder="Try Cypro, Spike, or thiamethoxam" aria-autocomplete="list" aria-controls="product-suggestions" />
+  <ul id="product-suggestions" class="suggestions" hidden></ul>
+  <div class="selection" aria-live="polite"></div>
+</div>
+<script is:inline define:vars={{ index }}>
+  const root = document.querySelector("[data-product-lookup]");
+  const input = root.querySelector("input");
+  const list = root.querySelector("ul");
+  const selection = root.querySelector(".selection");
+  let selectedId = null;
+
+  const normalized = (text) => text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  function matches(product, query) {
+    const haystack = normalized([product.brand, product.manufacturer, product.formulation, ...product.aliases, ...product.components].join(" "));
+    return query.split(" ").every((token) => haystack.includes(token));
+  }
+  function clearSelection() {
+    selectedId = null;
+    selection.innerHTML = "";
+  }
+  function renderSuggestions() {
+    const query = normalized(input.value);
+    clearSelection();
+    if (!query) { list.hidden = true; list.innerHTML = ""; return; }
+    const matchesList = index.filter((product) => matches(product, query)).slice(0, 8);
+    list.innerHTML = "";
+    list.hidden = false;
+    if (!matchesList.length) {
+      list.innerHTML = `<li><span class="muted">No product was found in this catalog. Clear the search or browse a known product. A missing result does not prove the product does not exist.</span></li>`;
+      return;
+    }
+    for (const product of matchesList) {
+      const item = document.createElement("li");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.innerHTML = `<strong>${product.brand}</strong> · ${product.manufacturer}<br><span class="muted">${product.formulation} · ${product.status}</span>`;
+      button.addEventListener("click", () => select(product));
+      item.append(button);
+      list.append(item);
+    }
+  }
+  function select(product) {
+    selectedId = product.id;
+    input.value = product.brand;
+    list.hidden = true;
+    selection.innerHTML = `<article class="card"><span class="badge ${product.status}">${product.status}</span><h3>Likely match: ${product.brand}</h3><p>${product.manufacturer}<br><strong>${product.formulation}</strong></p><p>Contains: ${product.components.join(", ")}</p><p><a href="/crop-protection/products/${product.id}/">Open product reference and crop-specific dose lookup</a></p><p class="muted">This selection uses catalog ID ${selectedId}. Confirm the manufacturer and formulation on your package before using it in a treatment history or mixing assessment.</p></article>`;
+  }
+  input.addEventListener("input", renderSuggestions);
+  input.addEventListener("focus", renderSuggestions);
+  document.addEventListener("click", (event) => { if (!root.contains(event.target)) list.hidden = true; });
+</script>

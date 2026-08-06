@@ -1,0 +1,16 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import MultiPestProgram from "../../../components/MultiPestProgram.astro";
+---
+<BaseLayout title="Multi-Pest Programs | Crop Protection Reference" description="Compare documented individual product coverage for multiple identified pests.">
+  <CropProtectionNav />
+  <p class="eyebrow">Program planning</p>
+  <h1>Multiple pests, one candidate program</h1>
+  <p class="lede">Start with the crop and user-identified organisms. The prototype finds the smallest individual-product combination that covers them, then distinguishes a possible sequential program from an approved tank mix.</p>
+  <MultiPestProgram />
+  <section>
+    <h2>How To Read The Result</h2>
+    <ol class="workflow"><li>Confirm each pest and its stage.</li><li>Check whether each pest needs intervention, not just whether it is present.</li><li>Look for one documented product or registered premix that covers the required targets.</li><li>If coverage requires more than one product, verify an exact tank mix or use an appropriate sequential program.</li></ol>
+  </section>
+</BaseLayout>

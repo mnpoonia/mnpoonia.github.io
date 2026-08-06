@@ -1,0 +1,16 @@
+[
+  {
+    "id": "sml-spike-sml-cypro-kinnow",
+    "productAId": "sml-spike-thiamethoxam-25-wg",
+    "productBId": "sml-cypro-profenofos-40-cypermethrin-4-ec",
+    "scope": { "cropId": "kinnow", "organismIds": ["asian-citrus-psyllid"] },
+    "classAssessment": "conditional",
+    "exactPhysical": "unknown",
+    "chemical": "unknown",
+    "labelAuthorization": "unresolved",
+    "cropSafety": "unknown",
+    "recommendation": "not-verified",
+    "sourceIds": ["sml-spike", "sml-cypro", "ppqs-major-uses-2026"],
+    "evidenceStatus": "conditional"
+  }
+]

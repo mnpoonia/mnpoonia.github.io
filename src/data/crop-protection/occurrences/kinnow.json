@@ -1,0 +1,11 @@
+[
+  { "id": "kinnow-asian-citrus-psyllid", "cropId": "kinnow", "organismId": "asian-citrus-psyllid", "monitoringNote": "Inspect tender flush, buds, and new leaves.", "href": "/crop-protection/pests/citrus-psylla/" },
+  { "id": "kinnow-citrus-mealybug", "cropId": "kinnow", "organismId": "citrus-mealybug", "monitoringNote": "Inspect leaf undersides, young shoots, fruit, and branches." },
+  { "id": "kinnow-citrus-leafminer", "cropId": "kinnow", "organismId": "citrus-leafminer", "monitoringNote": "Inspect fresh flush for live serpentine mines." },
+  { "id": "kinnow-citrus-whitefly", "cropId": "kinnow", "organismId": "citrus-whitefly", "monitoringNote": "Inspect the underside of new leaves." },
+  { "id": "kinnow-citrus-blackfly", "cropId": "kinnow", "organismId": "citrus-blackfly", "monitoringNote": "Inspect lower leaf surfaces and honeydew/sooty mould." },
+  { "id": "kinnow-oriental-red-mite", "cropId": "kinnow", "organismId": "oriental-red-mite", "monitoringNote": "Inspect both leaf surfaces; reliable identification may need magnification." },
+  { "id": "kinnow-oriental-peach-fruit-flies", "cropId": "kinnow", "organismId": "oriental-peach-fruit-flies", "monitoringNote": "Inspect fruit, fallen fruit, and documented traps." },
+  { "id": "kinnow-phytophthora-diseases", "cropId": "kinnow", "organismId": "phytophthora-diseases", "monitoringNote": "Inspect root collar, trunk base, basin, and canopy." },
+  { "id": "kinnow-citrus-scab", "cropId": "kinnow", "organismId": "citrus-scab", "monitoringNote": "Inspect leaves, twigs, and fruit for raised rough lesions." }
+]

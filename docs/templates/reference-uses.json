@@ -1,0 +1,20 @@
+[
+  {
+    "id": "example-crop-example-pest-example-formulation",
+    "ingredientId": "example-ingredient",
+    "cropId": "example-crop",
+    "organismId": "example-pest",
+    "target": "Example common name",
+    "formulation": "Example ingredient 25% WG",
+    "dose": "Source-backed dose with unit",
+    "waterVolume": "Source-backed water volume with unit",
+    "acreEquivalent": {
+      "dose": "about converted amount per acre",
+      "waterVolume": "about converted water per acre"
+    },
+    "timing": "Only source-backed timing or stage guidance.",
+    "conditions": "Only source-backed restrictions.",
+    "status": "conditional",
+    "sourceIds": ["source-id-already-in-the-catalog"]
+  }
+]

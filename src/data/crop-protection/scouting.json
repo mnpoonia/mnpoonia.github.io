@@ -1,0 +1,15 @@
+[
+  {
+    "id": "kinnow-psyllid-weekly-scouting",
+    "cropId": "kinnow",
+    "organismId": "asian-citrus-psyllid",
+    "name": "Kinnow citrus-psyllid orchard scouting",
+    "frequency": "Weekly, using the same representative trees for comparable follow-up counts.",
+    "sampleUnit": "Tender shoots on representative trees",
+    "sampleSize": "Use the applicable local protocol; the prototype does not invent a numeric PAU sample size.",
+    "method": ["Inspect tender flush, buds, and young leaves", "Record eggs, nymphs, and adults separately where possible", "Record natural enemies and infestation extent", "Use the same method at follow-up"],
+    "record": ["Infested shoots", "Observed stage", "Fresh flush presence", "Natural enemies", "Previous application and date"],
+    "sourceIds": ["niphm-citrus-2014", "pau-fruits-2024"],
+    "evidenceStatus": "conditional"
+  }
+]

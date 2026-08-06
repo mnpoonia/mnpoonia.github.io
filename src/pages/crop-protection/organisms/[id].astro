@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import ImageGallery from "../../../components/ImageGallery.astro";
+import { crops, cropOrganismOccurrences, imageAssets, organisms, organismStages, referenceUses, sourceFor } from "../../../data/crop-protection";
+
+export function getStaticPaths() {
+  return organisms.map((organism) => ({ params: { id: organism.id }, props: { organism } }));
+}
+
+const { organism } = Astro.props;
+const stages = organismStages.filter((stage) => stage.organismId === organism.id).sort((left, right) => left.order - right.order);
+const occurrences = cropOrganismOccurrences.filter((occurrence) => occurrence.organismId === organism.id);
+const uses = referenceUses.filter((use) => use.organismId === organism.id);
+const cropName = (cropId: string) => crops.find((crop) => crop.id === cropId)?.name ?? cropId;
+---
+<BaseLayout title={`${organism.name} | Crop Protection Reference`} description={`Reference data for ${organism.name}.`}>
+  <CropProtectionNav />
+  <p class="eyebrow">Generated organism reference</p>
+  <h1>{organism.name}</h1>
+  <p class="lede">{organism.type}{organism.scientificName && <> · <em>{organism.scientificName}</em></>}</p>
+  {organism.aliases.length > 0 && <p>Also called: {organism.aliases.join(" · ")}</p>}
+  <section>
+    <h2>Crop Context</h2>
+    <ul>{occurrences.map((occurrence) => <li><a href={`/crop-protection/crops/${occurrence.cropId}/`}>{cropName(occurrence.cropId)}</a>: {occurrence.monitoringNote}</li>)}</ul>
+  </section>
+  {stages.length > 0 && <section><h2>Stages and Symptoms</h2><div class="grid">{stages.map((stage) => <article class="card"><h3>{stage.name}</h3><ImageGallery heading={`${stage.name} image`} images={imageAssets.filter((image) => image.stageId === stage.id)} /><p><strong>Where:</strong> {stage.whereToLook}</p><p><strong>Visibility:</strong> {stage.visibility}</p><p><strong>What to do:</strong> {stage.immediateAction}</p><p class="muted">{stage.managementEvidence}</p></article>)}</div></section>}
+  <section>
+    <h2>Documented Formulation References</h2>
+    {uses.length ? <table><thead><tr><th>Crop</th><th>Formulation</th><th>Dose</th><th>Evidence</th></tr></thead><tbody>{uses.map((use) => <tr><td>{cropName(use.cropId)}</td><td>{use.formulation}</td><td>{use.dose}</td><td>{use.sourceIds.map((id) => <a href={sourceFor(id).url}>{sourceFor(id).publisher}</a>)}</td></tr>)}</tbody></table> : <p class="note">No formulation reference is recorded for this organism yet.</p>}
+  </section>
+</BaseLayout>

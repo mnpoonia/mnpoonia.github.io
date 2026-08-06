@@ -1,0 +1,13 @@
+[
+  {
+    "id": "kinnow",
+    "name": "Kinnow",
+    "scientificName": "Citrus reticulata hybrid / Kinnow mandarin",
+    "aliases": ["Citrus / Kinnow"]
+  },
+  {
+    "id": "cotton",
+    "name": "Cotton",
+    "aliases": []
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "kinnow-psyllid-punjab-mar-oct",
+    "cropId": "kinnow",
+    "organismId": "asian-citrus-psyllid",
+    "geographyId": "punjab",
+    "months": [3, 4, 5, 6, 7, 8, 9, 10],
+    "monitoringPriority": "check-first",
+    "likelihood": "high",
+    "conditions": ["Tender flush or opening buds present"],
+    "evidenceStatus": "conditional",
+    "sourceIds": ["pau-fruits-2024"]
+  },
+  {
+    "id": "kinnow-psyllid-abohar-aug",
+    "cropId": "kinnow",
+    "organismId": "asian-citrus-psyllid",
+    "geographyId": "abohar",
+    "months": [8],
+    "monitoringPriority": "check-first",
+    "likelihood": "high",
+    "conditions": ["Tender flush or opening buds present", "Actual scouting overrides seasonal likelihood"],
+    "evidenceStatus": "conditional",
+    "sourceIds": ["pau-fruits-2024"]
+  }
+]

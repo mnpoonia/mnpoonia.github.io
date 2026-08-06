@@ -1,0 +1,59 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import { crops, ingredients, products, referenceUses, sourceFor } from "../../../data/crop-protection";
+
+export function getStaticPaths() {
+  return ingredients.map((ingredient) => ({ params: { id: ingredient.id }, props: { ingredient } }));
+}
+
+const { ingredient } = Astro.props;
+const matchingProducts = products.filter((product) => product.components.some((component) => component.ingredientId === ingredient.id));
+const matchingUses = referenceUses.filter((use) => use.ingredientId === ingredient.id);
+const cropName = (cropId: string) => crops.find((crop) => crop.id === cropId)?.name ?? cropId;
+---
+<BaseLayout title={`${ingredient.name} | Crop Protection Reference`} description={`Reference information for ${ingredient.name}.`}>
+  <CropProtectionNav />
+  <p class="eyebrow">Active ingredient reference</p>
+  <h1>{ingredient.name}</h1>
+  <p class="lede">Category: {ingredient.category}. {ingredient.iracGroup ? `IRAC group ${ingredient.iracGroup}${ingredient.modeOfAction ? `, ${ingredient.modeOfAction}` : ""}.` : "No IRAC group is encoded in this small prototype."}</p>
+
+  <section>
+    <h2>Documented Dose References</h2>
+    <p>A dose belongs to an exact crop, pest, formulation, and source. It is not a general dose for {ingredient.name}.</p>
+    {matchingUses.length ? <table>
+      <thead><tr><th>Crop and target</th><th>Formulation</th><th>Dose</th><th>Water volume</th><th>Timing and conditions</th></tr></thead>
+      <tbody>{matchingUses.map((use) => <tr>
+        <td>{cropName(use.cropId)}<br /><span class="muted">{use.target}</span><br /><span class={`badge ${use.status}`}>{use.status}</span></td>
+        <td>{use.formulation}</td>
+        <td><strong>{use.dose}</strong></td>
+        <td>{use.waterVolume}</td>
+        <td>{use.timing}{use.conditions && <><br /><br /><strong>Conditions:</strong> {use.conditions}</>}<br /><br />Source: {use.sourceIds.map((id) => <a href={sourceFor(id).url}>{sourceFor(id).publisher}</a>)}</td>
+      </tr>)}</tbody>
+    </table> : <p class="note">No source-backed dose reference is in this prototype yet. Do not infer a dose from another crop, formulation, or brand.</p>}
+    <p class="note"><strong>Before application:</strong> confirm the current container label for the selected brand and formulation, crop-target use, interval, maximum applications, pre-harvest interval, flowering restrictions, and local advice. This reference records PAU agronomic guidance; it does not replace the product label.</p>
+  </section>
+
+  <section>
+    <h2>Catalog Formulations</h2>
+    {matchingProducts.length ? <div class="grid">
+      {matchingProducts.map((product) => <article class="card">
+        <span class={`badge ${product.status}`}>{product.status}</span>
+        <h3>{product.brand}</h3>
+        <p>{product.manufacturer}<br /><strong>{product.formulation}</strong></p>
+        <p>{product.verifiedCropUses.join(" · ")}</p>
+      </article>)}
+    </div> : <p class="note">No commercial formulation is in the small prototype catalog yet.</p>}
+  </section>
+
+  <section>
+    <h2>Evidence</h2>
+    <p>Ingredient identity does not establish a crop use, dose, tank-mix compatibility, or recommendation. Those require the exact formulation, current label, crop, pest, stage, and application context.</p>
+    <ul>
+      {matchingProducts.flatMap((product) => product.sourceIds).filter((id, index, ids) => ids.indexOf(id) === index).map((id) => {
+        const source = sourceFor(id);
+        return <li><a href={source.url}>{source.title}</a>, {source.publisher} ({source.year})</li>;
+      })}
+    </ul>
+  </section>
+</BaseLayout>

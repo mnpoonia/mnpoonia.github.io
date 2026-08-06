@@ -1,0 +1,36 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../components/CropProtectionNav.astro";
+import ProductLookup from "../../components/ProductLookup.astro";
+import SeasonalMonitor from "../../components/SeasonalMonitor.astro";
+---
+<BaseLayout title="Crop Protection Reference | Aman Poonia" description="A traceable crop-protection reference prototype for Punjab.">
+  <CropProtectionNav />
+  <section class="hero">
+    <p class="eyebrow">Punjab crop-protection reference</p>
+    <h1>Identify first. Decide with evidence.</h1>
+    <p class="lede">A static reference prototype for crops, pests, pesticide formulations, product compositions, and documented decision support. The first vertical slice is Kinnow and citrus psylla around Abohar.</p>
+    <p><a href="/crop-protection/crops/kinnow/">Browse Kinnow</a> · <a href="/crop-protection/pests/citrus-psylla/">Identify citrus psylla</a> · <a href="/crop-protection/assistant/">Assess a situation</a></p>
+  </section>
+
+  <SeasonalMonitor />
+
+  <section>
+    <h2>Start With What You Know</h2>
+    <div class="grid">
+      <article class="card"><p class="eyebrow">1. Identify</p><h3><a href="/crop-protection/pests/citrus-psylla/">I found insects, eggs, or damage</a></h3><p>Compare life stages, visible features, likely months, look-alikes, and beneficial organisms before considering treatment.</p></article>
+      <article class="card"><p class="eyebrow">2. Browse</p><h3>Choose a crop</h3><p>Use the <strong>Browse crop</strong> menu above to view seasonal monitoring priorities, plant parts to inspect, and evidence-backed options. Kinnow is the first available crop.</p></article>
+      <article class="card"><p class="eyebrow">3. Assess</p><h3><a href="/crop-protection/assistant/">I know the pest</a></h3><p>Record pest pressure and earlier products. The prototype explains what is known, unknown, excluded, or not preferred.</p></article>
+    </div>
+  </section>
+
+  <section>
+    <h2>What Does My Product Contain?</h2>
+    <p>Search a known catalog product by brand, manufacturer, ingredient, composition, or formulation. You must select a displayed entry; a typed name is never treated as product data.</p>
+    <ProductLookup />
+  </section>
+
+  <section class="note">
+    <strong>Evidence boundary:</strong> seasonality identifies what deserves inspection. It does not prove that a pest is in your orchard, that an action threshold is crossed, or that a pesticide should be applied. Current labels remain controlling for any application.
+  </section>
+</BaseLayout>

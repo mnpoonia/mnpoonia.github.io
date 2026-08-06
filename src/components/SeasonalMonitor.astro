@@ -1,0 +1,143 @@
+---
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+const kinnowRules = [
+  {
+    id: "citrus-psylla",
+    name: "Asian citrus psyllid",
+    aliases: "Citrus psylla · Citrus psyllid · Diaphorina citri",
+    months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    augustPriority: "Check first",
+    defaultPriority: "Routine",
+    condition: "Prioritize when tender flush, opening buds, or new leaves are present.",
+    inspect: "Tender shoots and opening buds for eggs, nymphs, adults, curl, and waxy deposits.",
+    href: "/crop-protection/pests/citrus-psylla/",
+  },
+  {
+    id: "mealybugs",
+    name: "Citrus mealybugs",
+    aliases: "Planococcus citri and related citrus mealybugs",
+    months: [7, 8, 9, 10],
+    augustPriority: "Check first",
+    defaultPriority: "Routine",
+    condition: "PAU lists citrus mealybugs as active July-October.",
+    inspect: "Leaf undersides, young shoots, fruit, and branches for wax, honeydew, and sooty mould.",
+  },
+  {
+    id: "fruit-flies",
+    name: "Oriental and peach fruit flies",
+    aliases: "Bactrocera dorsalis · Bactrocera zonata",
+    months: [8, 9, 10],
+    augustPriority: "Check first",
+    defaultPriority: "Routine",
+    condition: "PAU specifies fruit-fly traps from the second week of August.",
+    inspect: "Fruit and fallen fruit for punctures, local rot, juice leakage, and premature fall; inspect documented traps.",
+  },
+  {
+    id: "leafminer",
+    name: "Citrus leafminer",
+    aliases: "Phyllocnistis citrella",
+    months: [3, 4, 5, 6, 7, 8, 9, 10, 11],
+    augustPriority: "Routine",
+    defaultPriority: "Routine",
+    condition: "Most useful to check during fresh flush; PAU identifies later seasonal peaks.",
+    inspect: "New leaves for live serpentine mines, curled margins, and folded leaf ends.",
+  },
+  {
+    id: "whitefly-blackfly",
+    name: "Citrus whitefly and blackfly",
+    aliases: "Dialeurodes citri · Aleurocanthus woglumi",
+    months: [3, 4, 5, 6, 7, 8, 9, 10, 11],
+    augustPriority: "Routine",
+    defaultPriority: "Routine",
+    condition: "PAU records March-November activity; August is between reported peak periods.",
+    inspect: "Lower leaf surfaces for eggs, nymphs, adults, honeydew, and sooty mould.",
+  },
+  {
+    id: "mites",
+    name: "Phytophagous mites",
+    aliases: "Oriental red mite · two-spotted spider mite · flat mites",
+    months: [4, 5, 6, 8, 9],
+    augustPriority: "Conditional",
+    defaultPriority: "Conditional",
+    condition: "PAU notes oriental red mite can sometimes be serious in August-September, while an Abohar study found rainy-season suppression. Check local conditions rather than assuming an outbreak.",
+    inspect: "Both leaf surfaces for feeding specks and dusty appearance; reliable identification may need magnification.",
+  },
+  {
+    id: "phytophthora",
+    name: "Phytophthora diseases",
+    aliases: "Gummosis · foot rot",
+    months: [7, 8],
+    augustPriority: "Check first",
+    defaultPriority: "Conditional",
+    condition: "Rainy and humid weather can favor disease development; this is a disease watch, not an insect pest forecast.",
+    inspect: "Root collar, trunk base, basin, and canopy for gumming, wet bark, cracks, dieback, and root-health decline.",
+  },
+  {
+    id: "citrus-scab",
+    name: "Citrus scab",
+    aliases: "Elsinoe fawcettii",
+    months: [7, 8],
+    augustPriority: "Routine",
+    defaultPriority: "Conditional",
+    condition: "PAU identifies a late-June to August management window; wet summer flush is relevant.",
+    inspect: "Leaves, twigs, and fruit for dark, rough, raised lesions or corky projections.",
+  },
+];
+---
+<section class="monitor-tool" data-seasonal-monitor>
+  <div>
+    <p class="eyebrow">Monitoring planner</p>
+    <h2>What should I inspect this month?</h2>
+    <p>Select a crop and month. The tool ranks what to monitor, not what to spray.</p>
+  </div>
+  <div class="monitor-controls">
+    <label for="crop-select">Crop
+      <select id="crop-select" name="crop">
+        <option value="kinnow">Kinnow</option>
+      </select>
+    </label>
+    <label for="month-select">Month
+      <select id="month-select" name="month">
+        {monthNames.map((month, index) => <option value={index + 1}>{month}</option>)}
+      </select>
+    </label>
+    <label for="district-select">Location basis
+      <select id="district-select" name="district">
+        <option value="abohar">Abohar / Fazilka</option>
+        <option value="punjab">Punjab</option>
+      </select>
+    </label>
+  </div>
+  <p class="muted" data-current-month></p>
+  <div class="monitor-results" aria-live="polite"></div>
+</section>
+<script is:inline define:vars={{ kinnowRules }}>
+  const root = document.querySelector("[data-seasonal-monitor]");
+  const monthSelect = root.querySelector('[name="month"]');
+  const locationSelect = root.querySelector('[name="district"]');
+  const currentMonth = root.querySelector("[data-current-month]");
+  const results = root.querySelector(".monitor-results");
+  const priorityOrder = { "Check first": 0, Routine: 1, Conditional: 2 };
+  const monthName = (month) => new Intl.DateTimeFormat("en-IN", { month: "long" }).format(new Date(2026, month - 1, 1));
+
+  function render() {
+    const month = Number(monthSelect.value);
+    const locality = locationSelect.value === "abohar" ? "Abohar / Fazilka" : "Punjab";
+    const rules = kinnowRules
+      .filter((rule) => rule.months.includes(month))
+      .map((rule) => ({ ...rule, priority: month === 8 ? rule.augustPriority : rule.defaultPriority }))
+      .sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority] || a.name.localeCompare(b.name));
+    currentMonth.textContent = `Showing Kinnow monitoring priorities for ${monthName(month)} using ${locality} as the geographic basis.`;
+    if (!rules.length) {
+      results.innerHTML = `<div class="card"><strong>No month-specific Kinnow monitoring records are in this small prototype yet.</strong><p>Browse the crop reference or choose another month. This is a data gap, not evidence that no pests occur.</p></div>`;
+      return;
+    }
+    results.innerHTML = rules.map((rule) => `<article class="monitor-card"><span class="badge ${rule.priority === "Check first" ? "verified" : rule.priority === "Routine" ? "conditional" : "unverified"}">${rule.priority}</span><h3>${rule.href ? `<a href="${rule.href}">${rule.name}</a>` : rule.name}</h3><p class="muted">${rule.aliases}</p><p><strong>Why monitor:</strong> ${rule.condition}</p><p><strong>Inspect:</strong> ${rule.inspect}</p><p class="muted">Monitoring priority is not a presence probability, action threshold, or pesticide recommendation.</p></article>`).join("");
+  }
+  const today = new Date();
+  monthSelect.value = String(today.getMonth() + 1);
+  monthSelect.addEventListener("change", render);
+  locationSelect.addEventListener("change", render);
+  render();
+</script>

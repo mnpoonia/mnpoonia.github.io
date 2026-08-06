@@ -1,0 +1,16 @@
+[
+  {
+    "id": "spike-citrus-psyllid-fixture",
+    "productId": "sml-spike-thiamethoxam-25-wg",
+    "cropId": "kinnow",
+    "organismId": "asian-citrus-psyllid",
+    "claim": "control",
+    "dose": "100 g per hectare",
+    "waterVolume": "1,000 litres per hectare",
+    "phi": "20 days",
+    "restrictions": ["PPQS formulation-level use only; verify the purchased SML container label and its current version before application."],
+    "labelVersion": "PPQS major-use table updated through 31 March 2026; exact SML statutory leaflet not yet captured",
+    "labelUrl": "https://sml-ltd.com/product/spike/",
+    "verificationStatus": "unverified"
+  }
+]

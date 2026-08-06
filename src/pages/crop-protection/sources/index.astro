@@ -1,0 +1,14 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import { sources } from "../../../data/crop-protection";
+---
+<BaseLayout title="Sources | Crop Protection Reference" description="Evidence sources used by the crop-protection prototype.">
+  <CropProtectionNav />
+  <p class="eyebrow">Evidence register</p>
+  <h1>Sources and limits</h1>
+  <p class="lede">Every prototype record identifies its evidence. A source can support a fact without authorizing a pesticide application.</p>
+  <div class="grid">
+    {sources.map((source) => <article class="card"><span class={`badge ${source.status}`}>{source.status}</span><h2><a href={source.url}>{source.title}</a></h2><p>{source.publisher} · {source.year}</p><p>{source.detail}</p></article>)}
+  </div>
+</BaseLayout>

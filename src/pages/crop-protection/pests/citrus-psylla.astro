@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import ImageGallery from "../../../components/ImageGallery.astro";
+import { imageAssets, organismStages } from "../../../data/crop-protection";
+
+const stages = organismStages.filter((stage) => stage.organismId === "asian-citrus-psyllid").sort((left, right) => left.order - right.order);
+---
+<BaseLayout title="Asian Citrus Psyllid Identification | Crop Protection Reference" description="Stage-by-stage identification reference for Asian citrus psyllid on Kinnow.">
+  <CropProtectionNav />
+  <p class="eyebrow">Pest identification · Kinnow</p>
+  <h1>Asian citrus psyllid</h1>
+  <p class="lede">Also called <strong>citrus psylla</strong> and <strong>citrus psyllid</strong>. Scientific name: <em>Diaphorina citri</em>. PAU describes damaging nymphs and adults on buds, leaves, and young shoots; it also vectors citrus greening disease.</p>
+
+  <section class="note"><strong>Do not spray for eggs alone.</strong> Unidentified eggs can belong to a pest or a beneficial organism. Confirm the organism, stage, plant symptoms, and infestation trend before treatment assessment.</section>
+
+  <section>
+    <h2>Stage Guide</h2>
+    <div class="grid">
+      {stages.map((stage) => <article class="card">
+        <h3>{stage.name}</h3>
+        <ImageGallery heading={`${stage.name} image`} images={imageAssets.filter((image) => image.stageId === stage.id)} />
+        <p><strong>Where to look:</strong> {stage.whereToLook}</p>
+        <p><strong>Visibility:</strong> {stage.visibility}</p>
+        <p><strong>Seasonality:</strong> {stage.seasonality}</p>
+        {stage.identificationNotes && <p><strong>Identification notes:</strong> {stage.identificationNotes}</p>}
+        <hr />
+        <p><strong>What to do:</strong> {stage.immediateAction}</p>
+        <p class="muted"><strong>Stage-linked management evidence:</strong> {stage.managementEvidence}</p>
+        {stage.kind === "damage" && <p><a href="/crop-protection/assistant/">Evaluate documented options</a></p>}
+      </article>)}
+    </div>
+  </section>
+
+  <section>
+    <h2>What To Record</h2>
+    <table><thead><tr><th>Observation</th><th>Why it matters</th></tr></thead><tbody>
+      <tr><td>Fresh flush present?</td><td>Psylla activity is closely tied to tender growth.</td></tr>
+      <tr><td>Egg, nymph, or adult?</td><td>Stage affects identification confidence and follow-up timing.</td></tr>
+      <tr><td>Infested shoots out of inspected shoots</td><td>Turns “high” or “low” into a comparable trend.</td></tr>
+      <tr><td>Beneficial insects present?</td><td>Natural enemies should not be misidentified as pests.</td></tr>
+      <tr><td>Previous products and date</td><td>Needed for label, interval, and resistance assessment.</td></tr>
+    </tbody></table>
+    <p><a href="/crop-protection/assistant/">I have identified citrus psylla. Assess what to do next.</a></p>
+  </section>
+
+  <section class="note"><strong>Stage-linked evidence rule:</strong> future pest cards can show a formulation, dose, and timing only when the source names that life stage or a defensible equivalent. Otherwise the card will state that stage-specific evidence is unknown.</section>
+</BaseLayout>

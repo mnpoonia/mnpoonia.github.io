@@ -1,0 +1,15 @@
+[
+  { "id": "asian-citrus-psyllid", "name": "Asian citrus psyllid", "scientificName": "Diaphorina citri", "aliases": ["Citrus psylla", "Citrus psyllid"], "type": "insect pest" },
+  { "id": "citrus-mealybug", "name": "Citrus mealybugs", "aliases": [], "type": "insect pest" },
+  { "id": "citrus-leafminer", "name": "Citrus leafminer", "scientificName": "Phyllocnistis citrella", "aliases": [], "type": "insect pest" },
+  { "id": "citrus-whitefly", "name": "Citrus whitefly", "scientificName": "Dialeurodes citri", "aliases": [], "type": "insect pest" },
+  { "id": "citrus-blackfly", "name": "Citrus blackfly", "scientificName": "Aleurocanthus woglumi", "aliases": [], "type": "insect pest" },
+  { "id": "oriental-red-mite", "name": "Oriental red mite", "scientificName": "Eutetranychus orientalis", "aliases": [], "type": "mite" },
+  { "id": "oriental-peach-fruit-flies", "name": "Oriental and peach fruit flies", "scientificName": "Bactrocera dorsalis / Bactrocera zonata", "aliases": [], "type": "insect pest" },
+  { "id": "phytophthora-diseases", "name": "Phytophthora diseases", "aliases": ["Gummosis", "Foot rot"], "type": "disease" },
+  { "id": "citrus-scab", "name": "Citrus scab", "scientificName": "Elsinoe fawcettii", "aliases": [], "type": "disease" },
+  { "id": "cotton-jassid", "name": "Jassid", "aliases": [], "type": "insect pest" },
+  { "id": "cotton-aphid", "name": "Aphid", "aliases": [], "type": "insect pest" },
+  { "id": "cotton-leafminer", "name": "Leafminer", "aliases": [], "type": "insect pest" },
+  { "id": "cotton-bollworm", "name": "Bollworm complex", "aliases": [], "type": "insect pest" }
+]

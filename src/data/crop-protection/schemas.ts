@@ -1,0 +1,193 @@
+import { z } from "zod";
+
+export const evidenceStatusSchema = z.enum(["verified", "conditional", "unverified", "research-only"]);
+
+export const cropSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  scientificName: z.string().optional(),
+  aliases: z.array(z.string()).default([]),
+});
+
+export const organismSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  scientificName: z.string().optional(),
+  aliases: z.array(z.string()).default([]),
+  type: z.enum(["insect pest", "mite", "disease", "weed"]),
+});
+
+export const cropOrganismOccurrenceSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  monitoringNote: z.string().min(1),
+  href: z.string().startsWith("/").optional(),
+});
+
+export const organismStageSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  kind: z.enum(["life-stage", "damage", "symptom-stage"]),
+  order: z.number().int().nonnegative(),
+  whereToLook: z.string().min(1),
+  visibility: z.string().min(1),
+  seasonality: z.string().min(1),
+  identificationNotes: z.string().optional(),
+  immediateAction: z.string().min(1),
+  managementEvidence: z.string().min(1),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+});
+
+export const imageAssetSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  subjectType: z.enum(["organism-stage", "product", "ingredient", "crop", "symptom", "look-alike"]),
+  organismId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  stageId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  productId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  ingredientId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  path: z.string().startsWith("/").optional(),
+  status: z.enum(["planned", "available"]),
+  role: z.enum(["primary", "detail", "comparison", "package-front", "package-back", "label", "damage"]),
+  alt: z.string().min(1),
+  caption: z.string().optional(),
+  imageNote: z.string().min(1),
+  displayOrder: z.number().int().nonnegative(),
+});
+
+export const geographySchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  type: z.enum(["country", "state", "district", "agroclimatic-zone"]),
+  parentId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  timezone: z.string().optional(),
+});
+
+export const seasonalitySchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  stageId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  geographyId: z.string().regex(/^[a-z0-9-]+$/),
+  months: z.array(z.number().int().min(1).max(12)).min(1),
+  monitoringPriority: z.enum(["check-first", "routine", "conditional"]),
+  likelihood: z.enum(["low", "moderate", "high", "very-high", "unknown"]),
+  conditions: z.array(z.string()).default([]),
+  evidenceStatus: evidenceStatusSchema,
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+});
+
+export const scoutingProtocolSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  frequency: z.string().min(1),
+  sampleUnit: z.string().min(1),
+  sampleSize: z.string().min(1),
+  method: z.array(z.string()).min(1),
+  record: z.array(z.string()).min(1),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  evidenceStatus: evidenceStatusSchema,
+});
+
+export const thresholdSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  stageId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  geographyId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  metric: z.string().min(1),
+  operator: z.enum([">", ">=", "<", "<=", "presence-based"]),
+  value: z.number().optional(),
+  unit: z.string().min(1),
+  protocolId: z.string().regex(/^[a-z0-9-]+$/),
+  action: z.enum(["increase-monitoring", "confirm-diagnosis", "consider-management"]),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  evidenceStatus: evidenceStatusSchema,
+});
+
+export const labelUseSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  productId: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  claim: z.enum(["control", "suppression"]),
+  dose: z.string().min(1),
+  waterVolume: z.string().optional(),
+  minimumInterval: z.string().optional(),
+  maxApplications: z.string().optional(),
+  phi: z.string().optional(),
+  rei: z.string().optional(),
+  restrictions: z.array(z.string()).default([]),
+  labelVersion: z.string().min(1),
+  labelEffectiveDate: z.string().optional(),
+  labelUrl: z.string().url(),
+  verificationStatus: evidenceStatusSchema,
+});
+
+export const compatibilitySchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  productAId: z.string().regex(/^[a-z0-9-]+$/),
+  productBId: z.string().regex(/^[a-z0-9-]+$/),
+  scope: z.object({
+    cropId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+    organismIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).default([]),
+  }),
+  classAssessment: z.enum(["compatible", "conditional", "incompatible", "unknown"]),
+  exactPhysical: z.enum(["documented-compatible", "documented-incompatible", "jar-test-only", "unknown"]),
+  chemical: z.enum(["documented-compatible", "documented-incompatible", "unknown"]),
+  labelAuthorization: z.enum(["authorized", "prohibited", "unresolved"]),
+  cropSafety: z.enum(["supported", "unsupported", "unknown"]),
+  recommendation: z.enum(["tank-mix-supported", "sequential-only", "not-verified", "prohibited"]),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  evidenceStatus: evidenceStatusSchema,
+});
+
+export const recommendationRuleSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  scope: z.object({
+    cropId: z.string().regex(/^[a-z0-9-]+$/),
+    organismId: z.string().regex(/^[a-z0-9-]+$/),
+  }),
+  inputs: z.array(z.enum(["days-since-application", "population-trend", "flowering", "water-stress", "prior-irac-groups", "stage", "threshold"])).min(1),
+  condition: z.string().min(1),
+  effect: z.enum(["monitor", "exclude", "not-preferred", "conditional", "recommendation-gate"]),
+  explanation: z.string().min(1),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  evidenceStatus: evidenceStatusSchema,
+});
+
+export const referenceUseSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  ingredientId: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  target: z.string().min(1),
+  formulation: z.string().min(1),
+  dose: z.string().min(1),
+  waterVolume: z.string().min(1),
+  acreEquivalent: z.object({
+    dose: z.string().min(1),
+    waterVolume: z.string().min(1),
+  }).optional(),
+  timing: z.string().optional(),
+  conditions: z.string().optional(),
+  status: evidenceStatusSchema,
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+});
+
+export type CropRecord = z.infer<typeof cropSchema>;
+export type OrganismRecord = z.infer<typeof organismSchema>;
+export type CropOrganismOccurrenceRecord = z.infer<typeof cropOrganismOccurrenceSchema>;
+export type OrganismStageRecord = z.infer<typeof organismStageSchema>;
+export type ImageAssetRecord = z.infer<typeof imageAssetSchema>;
+export type GeographyRecord = z.infer<typeof geographySchema>;
+export type SeasonalityRecord = z.infer<typeof seasonalitySchema>;
+export type ScoutingProtocolRecord = z.infer<typeof scoutingProtocolSchema>;
+export type ThresholdRecord = z.infer<typeof thresholdSchema>;
+export type LabelUseRecord = z.infer<typeof labelUseSchema>;
+export type CompatibilityRecord = z.infer<typeof compatibilitySchema>;
+export type RecommendationRuleRecord = z.infer<typeof recommendationRuleSchema>;
+export type ReferenceUseRecord = z.infer<typeof referenceUseSchema>;

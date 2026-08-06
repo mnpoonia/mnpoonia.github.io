@@ -1,0 +1,15 @@
+[
+  {
+    "id": "kinnow-psyllid-presence-response",
+    "cropId": "kinnow",
+    "organismId": "asian-citrus-psyllid",
+    "geographyId": "punjab",
+    "metric": "Psylla occurrence and population trend on susceptible flush",
+    "operator": "presence-based",
+    "unit": "No numeric PAU threshold encoded",
+    "protocolId": "kinnow-psyllid-weekly-scouting",
+    "action": "consider-management",
+    "sourceIds": ["pau-fruits-2024"],
+    "evidenceStatus": "conditional"
+  }
+]

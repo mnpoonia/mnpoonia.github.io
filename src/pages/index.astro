@@ -1,0 +1,23 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const posts = (await getCollection("blog")).sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+---
+<BaseLayout title="Aman Poonia" description="Technical notes and a crop-protection reference prototype.">
+  <p class="eyebrow">Technical writing</p>
+  <h1>Notes for building and understanding systems.</h1>
+  <p class="lede">Short reference notes from my work and learning. The crop-protection prototype is kept separate at <a href="/crop-protection/">Crop Protection</a>.</p>
+  <section aria-labelledby="posts-heading">
+    <h2 id="posts-heading">Writing</h2>
+    <div class="grid">
+      {posts.map((post) => (
+        <article class="card">
+          <p class="eyebrow">{post.data.published.toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" })}</p>
+          <h3><a href={`/posts/${post.id}/`}>{post.data.title}</a></h3>
+          <p>{post.data.description}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

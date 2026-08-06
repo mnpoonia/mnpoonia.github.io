@@ -1,0 +1,23 @@
+---
+import type { ImageAsset } from "../data/crop-protection";
+
+interface Props {
+  images: ImageAsset[];
+  heading?: string;
+}
+
+const { images, heading = "Images" } = Astro.props;
+---
+<section class="image-gallery" aria-label={heading}>
+  <h2>{heading}</h2>
+  <div class="image-gallery-grid">
+    {images.sort((left, right) => left.displayOrder - right.displayOrder).map((image) => image.status === "available" && image.path ? (
+      <figure class="image-asset">
+        <img src={image.path} alt={image.alt} loading="lazy" />
+        {image.caption && <figcaption>{image.caption}</figcaption>}
+      </figure>
+    ) : (
+      <div class="image-gap"><strong>Image planned</strong><br />{image.imageNote}<br /><small>{image.role.replace("-", " ")}</small></div>
+    ))}
+  </div>
+</section>

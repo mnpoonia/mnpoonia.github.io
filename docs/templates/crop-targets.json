@@ -1,0 +1,9 @@
+[
+  {
+    "id": "example-crop-example-pest",
+    "cropId": "example-crop",
+    "organismId": "example-pest",
+    "monitoringNote": "State the plant part, symptom, or life stage to inspect.",
+    "href": "/crop-protection/pests/example-pest/"
+  }
+]

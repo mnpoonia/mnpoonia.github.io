@@ -1,0 +1,55 @@
+[
+  {
+    "id": "asian-citrus-psyllid-egg",
+    "organismId": "asian-citrus-psyllid",
+    "name": "Egg",
+    "kind": "life-stage",
+    "order": 1,
+    "whereToLook": "Opening buds and tender shoots.",
+    "visibility": "May be visible as specks; reliable identification needs magnification. A 10x hand lens is a proposed field aid and remains unverified in the current source set.",
+    "seasonality": "Possible on fresh flush; stage-specific Punjab month evidence is incomplete.",
+    "immediateAction": "Confirm identity with magnification and inspect for nymphs or adults before considering treatment.",
+    "managementEvidence": "No egg-specific formulation or action rule is verified in the current PAU source.",
+    "sourceIds": ["pau-fruits-2024", "niphm-citrus-2014"]
+  },
+  {
+    "id": "asian-citrus-psyllid-nymph",
+    "organismId": "asian-citrus-psyllid",
+    "name": "Nymph",
+    "kind": "life-stage",
+    "order": 2,
+    "whereToLook": "Tender leaves and young shoots.",
+    "visibility": "Later nymphs can be found with careful naked-eye inspection; use magnification for reliable early-stage identification.",
+    "seasonality": "Psylla is within PAU's March-mid-October peak period.",
+    "immediateAction": "Count infested shoots, inspect natural enemies, and compare repeated observations.",
+    "managementEvidence": "PAU lists imidacloprid 17.8% SL, thiamethoxam 25% WG, horticultural mineral oil, and specified vegetable-oil treatments for citrus psylla. These require current-label, interval, flowering, water-stress, and recent-IRAC checks.",
+    "sourceIds": ["pau-fruits-2024", "niphm-citrus-2014"]
+  },
+  {
+    "id": "asian-citrus-psyllid-adult",
+    "organismId": "asian-citrus-psyllid",
+    "name": "Adult",
+    "kind": "life-stage",
+    "order": 3,
+    "whereToLook": "Fresh flush and young shoots.",
+    "visibility": "Generally observable during careful visual scouting; identification needs comparison with verified images.",
+    "seasonality": "Possible year-round; actual orchard scouting outweighs the calendar.",
+    "immediateAction": "Inspect fresh flush for eggs and nymphs. Distinguish isolated migrant adults from an increasing orchard-wide population.",
+    "managementEvidence": "PAU lists general citrus-psylla options, but no adult-only formulation ranking, threshold, or repeat-spray interval is verified.",
+    "sourceIds": ["pau-fruits-2024", "niphm-citrus-2014"]
+  },
+  {
+    "id": "asian-citrus-psyllid-damage",
+    "organismId": "asian-citrus-psyllid",
+    "name": "Associated damage",
+    "kind": "damage",
+    "order": 4,
+    "whereToLook": "Tender growth, leaves, and shoots.",
+    "visibility": "Visible symptoms can be inspected with the naked eye, but they are not unique to psylla.",
+    "seasonality": "Damage may be observed whenever an active psylla population is established on susceptible flush.",
+    "identificationNotes": "Inspect for leaf curl, drying shoots, waxy or honeydew-like deposits, and greening symptoms. Lacewing eggs on fine stalks and clustered ladybird eggs can be beneficial; do not treat them as psylla.",
+    "immediateAction": "Use the assessment workflow with counts, trend, previous products, crop condition, and local context.",
+    "managementEvidence": "Mixed stages or damage alone cannot create a treatment schedule. Evaluate documented options only after identification and scouting.",
+    "sourceIds": ["pau-fruits-2024", "niphm-citrus-2014"]
+  }
+]

@@ -1,0 +1,86 @@
+[
+  {
+    "id": "asian-citrus-psyllid-egg-primary",
+    "subjectType": "organism-stage",
+    "organismId": "asian-citrus-psyllid",
+    "stageId": "asian-citrus-psyllid-egg",
+    "status": "planned",
+    "role": "primary",
+    "alt": "Citrus psyllid eggs on tender Kinnow growth",
+    "imageNote": "Need a close image with scale and tender plant tissue visible.",
+    "displayOrder": 1
+  },
+  {
+    "id": "asian-citrus-psyllid-nymph-primary",
+    "subjectType": "organism-stage",
+    "organismId": "asian-citrus-psyllid",
+    "stageId": "asian-citrus-psyllid-nymph",
+    "status": "planned",
+    "role": "primary",
+    "alt": "Citrus psyllid nymph on tender Kinnow leaf",
+    "imageNote": "Need separate early and late nymph detail images later.",
+    "displayOrder": 1
+  },
+  {
+    "id": "asian-citrus-psyllid-adult-primary",
+    "subjectType": "organism-stage",
+    "organismId": "asian-citrus-psyllid",
+    "stageId": "asian-citrus-psyllid-adult",
+    "status": "planned",
+    "role": "primary",
+    "alt": "Adult Asian citrus psyllid showing its angled feeding posture",
+    "imageNote": "Need a side-view photograph showing feeding posture and scale.",
+    "displayOrder": 1
+  },
+  {
+    "id": "asian-citrus-psyllid-damage-primary",
+    "subjectType": "organism-stage",
+    "organismId": "asian-citrus-psyllid",
+    "stageId": "asian-citrus-psyllid-damage",
+    "status": "planned",
+    "role": "damage",
+    "alt": "Kinnow tender growth showing symptoms associated with citrus psyllid infestation",
+    "imageNote": "Need healthy and damaged new-flush comparison images.",
+    "displayOrder": 1
+  },
+  {
+    "id": "sml-spike-package-front",
+    "subjectType": "product",
+    "productId": "sml-spike-thiamethoxam-25-wg",
+    "status": "planned",
+    "role": "package-front",
+    "alt": "Front of SML Spike thiamethoxam 25% WG package",
+    "imageNote": "Package-front image should make brand, concentration, and formulation readable.",
+    "displayOrder": 1
+  },
+  {
+    "id": "sml-spike-package-back",
+    "subjectType": "product",
+    "productId": "sml-spike-thiamethoxam-25-wg",
+    "status": "planned",
+    "role": "package-back",
+    "alt": "Back label of SML Spike thiamethoxam 25% WG package",
+    "imageNote": "Back label should be readable enough to verify registration and directions.",
+    "displayOrder": 2
+  },
+  {
+    "id": "sml-cypro-package-front",
+    "subjectType": "product",
+    "productId": "sml-cypro-profenofos-40-cypermethrin-4-ec",
+    "status": "planned",
+    "role": "package-front",
+    "alt": "Front of SML Cypro profenofos 40% plus cypermethrin 4% EC package",
+    "imageNote": "Package-front image should make brand, composition, and formulation readable.",
+    "displayOrder": 1
+  },
+  {
+    "id": "sml-cypro-package-back",
+    "subjectType": "product",
+    "productId": "sml-cypro-profenofos-40-cypermethrin-4-ec",
+    "status": "planned",
+    "role": "package-back",
+    "alt": "Back label of SML Cypro package",
+    "imageNote": "Back label should be readable enough to verify crop directions and restrictions.",
+    "displayOrder": 2
+  }
+]

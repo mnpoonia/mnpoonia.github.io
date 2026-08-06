@@ -1,0 +1,6 @@
+[
+  { "id": "cotton-jassid-occurrence", "cropId": "cotton", "organismId": "cotton-jassid", "monitoringNote": "Confirm the identified pest stage and pressure before treatment assessment." },
+  { "id": "cotton-aphid-occurrence", "cropId": "cotton", "organismId": "cotton-aphid", "monitoringNote": "Confirm colonies, crop stage, and pressure before treatment assessment." },
+  { "id": "cotton-leafminer-occurrence", "cropId": "cotton", "organismId": "cotton-leafminer", "monitoringNote": "Confirm live mines and the affected crop stage before treatment assessment." },
+  { "id": "cotton-bollworm-occurrence", "cropId": "cotton", "organismId": "cotton-bollworm", "monitoringNote": "Confirm the caterpillar species, crop stage, and threshold before treatment assessment." }
+]

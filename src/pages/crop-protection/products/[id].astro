@@ -1,0 +1,45 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import ImageGallery from "../../../components/ImageGallery.astro";
+import ProductDoseLookup from "../../../components/ProductDoseLookup.astro";
+import { imageAssets, ingredientFor, products, sourceFor } from "../../../data/crop-protection";
+
+export function getStaticPaths() {
+  return products.map((product) => ({ params: { id: product.id }, props: { product } }));
+}
+
+const { product } = Astro.props;
+---
+<BaseLayout title={`${product.brand} | Product Reference`} description={`Ingredients and documented crop-dose references for ${product.brand}.`}>
+  <CropProtectionNav />
+  <p class="eyebrow">Catalog product</p>
+  <h1>{product.brand}</h1>
+  <p class="lede">{product.manufacturer} · <strong>{product.formulation}</strong></p>
+  <span class={`badge ${product.status}`}>{product.status}</span>
+
+  <ImageGallery heading="Package and label images" images={imageAssets.filter((image) => image.productId === product.id)} />
+
+  <section>
+    <h2>What It Contains</h2>
+    <table><thead><tr><th>Active ingredient</th><th>Concentration</th><th>IRAC group</th></tr></thead><tbody>
+      {product.components.map((component) => {
+        const ingredient = ingredientFor(component.ingredientId);
+        return <tr><td><a href={`/crop-protection/ingredients/${ingredient.id}/`}>{ingredient.name}</a></td><td>{component.concentration}</td><td>{ingredient.iracGroup ? `${ingredient.iracGroup} (${ingredient.modeOfAction})` : "Not applicable / not encoded"}</td></tr>;
+      })}
+    </tbody></table>
+  </section>
+
+  <ProductDoseLookup product={product} />
+
+  <section>
+    <h2>Known Crop-Use Status</h2>
+    <ul>{product.verifiedCropUses.map((use) => <li>{use}</li>)}</ul>
+    <p class="note">A matching active ingredient does not make this exact branded formulation suitable for a crop. Dose, crop use, mixing, and safety need exact product-level evidence.</p>
+  </section>
+
+  <section>
+    <h2>Sources</h2>
+    <ul>{product.sourceIds.map((id) => { const source = sourceFor(id); return <li><a href={source.url}>{source.title}</a>, {source.publisher} ({source.year})</li>; })}</ul>
+  </section>
+</BaseLayout>

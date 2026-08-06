@@ -1,0 +1,19 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import PsyllaAssessment from "../../../components/PsyllaAssessment.astro";
+---
+<BaseLayout title="Kinnow Psylla Assessment | Crop Protection Reference" description="A limited, traceable assessment prototype for Kinnow citrus psylla in Punjab.">
+  <CropProtectionNav />
+  <p class="eyebrow">Decision-support prototype</p>
+  <h1>Kinnow and citrus psylla follow-up</h1>
+  <p class="lede">Use this after you have identified citrus psylla with reasonable confidence. The prototype evaluates a limited set of documented options and is deliberately able to say “not known” or “not yet supported.”</p>
+
+  <section>
+    <h2>General Guidance</h2>
+    <ol class="workflow"><li>Confirm the organism and stage on fresh flush.</li><li>Count comparable shoots before and after an application.</li><li>Verify the exact products, dose, water volume, coverage, and rain after spraying.</li><li>Use current labels and local guidance before any further application.</li></ol>
+    <p>PAU provides citrus-psylla options but the reviewed source does not supply a numeric action threshold or a universal repeat-spray interval. A reassessment date is not an automatic application date.</p>
+  </section>
+  <PsyllaAssessment />
+  <section class="note"><strong>Tank mixtures:</strong> formulation-class information can only screen physical risk. Exact-product compatibility, label authorization, crop-specific safety, target support, and scenario constraints must all be verified before a mixture can be recommended.</section>
+</BaseLayout>

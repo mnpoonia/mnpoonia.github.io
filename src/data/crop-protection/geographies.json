@@ -1,0 +1,6 @@
+[
+  { "id": "india", "name": "India", "type": "country", "timezone": "Asia/Kolkata" },
+  { "id": "punjab", "name": "Punjab", "type": "state", "parentId": "india", "timezone": "Asia/Kolkata" },
+  { "id": "fazilka", "name": "Fazilka", "type": "district", "parentId": "punjab", "timezone": "Asia/Kolkata" },
+  { "id": "abohar", "name": "Abohar", "type": "district", "parentId": "fazilka", "timezone": "Asia/Kolkata" }
+]

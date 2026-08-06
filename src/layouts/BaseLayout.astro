@@ -1,0 +1,35 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "A technical blog and crop-protection reference." } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header-inner">
+        <a class="brand" href="/">Aman Poonia</a>
+        <nav aria-label="Main navigation">
+          <a href="/">Writing</a>
+          <a href="/crop-protection/">Crop Protection</a>
+          <a href="https://github.com/mnpoonia/">GitHub</a>
+        </nav>
+      </div>
+    </header>
+    <main><slot /></main>
+    <footer class="site-footer">
+      Crop-protection content is a traceable reference prototype, not a substitute for the current product label or local agricultural advice.
+    </footer>
+  </body>
+</html>

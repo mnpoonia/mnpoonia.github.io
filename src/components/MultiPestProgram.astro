@@ -1,0 +1,76 @@
+---
+import { cropOrganismOccurrences, crops, organisms, products, referenceUses } from "../data/crop-protection";
+
+const cropOptions = crops;
+const productUses = products.map((product) => ({
+  id: product.id,
+  brand: product.brand,
+  formulation: product.formulation,
+  uses: referenceUses.filter((use) => product.components.some((component) => component.ingredientId === use.ingredientId) && use.formulation === product.formulation),
+}));
+---
+<section class="multi-pest-tool" data-multi-pest-program>
+  <p class="eyebrow">Multi-pest program finder</p>
+  <h2>Find a pesticide program for multiple pests</h2>
+  <p>Select a crop, then select only organisms you have identified with reasonable confidence. The tool finds the smallest set of individually documented products that covers the selected targets. It separately tells you whether they may be used sequentially or mixed in one tank.</p>
+  <div class="multi-pest-controls">
+    <label for="program-crop"><strong>Crop</strong><select id="program-crop" name="crop">{cropOptions.map((crop) => <option value={crop.id}>{crop.name}</option>)}</select></label>
+    <fieldset><legend><strong>What did you identify?</strong></legend><div data-target-list></div></fieldset>
+  </div>
+  <button type="button">Find candidate program</button>
+  <div class="program-result" aria-live="polite"></div>
+</section>
+<script is:inline define:vars={{ cropOrganismOccurrences, organisms, productUses }}>
+  const root = document.querySelector("[data-multi-pest-program]");
+  const cropSelect = root.querySelector('[name="crop"]');
+  const button = root.querySelector("button");
+  const output = root.querySelector(".program-result");
+  const targetList = root.querySelector("[data-target-list]");
+
+  function renderTargets() {
+    const crop = cropSelect.value;
+    const targets = cropOrganismOccurrences.filter((occurrence) => occurrence.cropId === crop).map((occurrence) => ({
+      ...occurrence,
+      organism: organisms.find((organism) => organism.id === occurrence.organismId),
+    })).filter((target) => target.organism);
+    targetList.innerHTML = targets.map((target) => `<label><input name="target" type="checkbox" value="${target.organismId}" /> <strong>${target.organism.name}</strong>${target.organism.scientificName ? ` · <em>${target.organism.scientificName}</em>` : ""}<br><span class="muted">${target.organism.type} · ${target.monitoringNote}</span></label>`).join("");
+  }
+
+  function render() {
+    const crop = cropSelect.value;
+    const selected = [...root.querySelectorAll('[name="target"]:checked')].map((input) => input.value);
+    if (!selected.length) {
+      output.innerHTML = `<article class="note">Select one or more organisms you have identified. These selections are user-reported, not automatically confirmed by the site. Observing an insect is not itself evidence that treatment is necessary.</article>`;
+      return;
+    }
+    const candidates = productUses.map((product) => ({
+      ...product,
+      covered: product.uses.filter((use) => use.cropId === crop && selected.includes(use.organismId)),
+    })).filter((product) => product.covered.length);
+    const coveredTargets = new Set(candidates.flatMap((product) => product.covered.map((use) => use.organismId)));
+    const uncovered = selected.filter((target) => !coveredTargets.has(target));
+    const selectedNames = organisms.filter((organism) => selected.includes(organism.id)).map((organism) => organism.name);
+    const cropName = cropSelect.options[cropSelect.selectedIndex]?.text ?? crop;
+    const cards = candidates.map((product) => `<article class="card"><h3>${product.brand}</h3><p><strong>${product.formulation}</strong></p><p><strong>Documented coverage:</strong> ${product.covered.map((use) => `${use.target} (${use.dose})`).join(", ")}</p><p class="muted">This is individual product coverage, not tank-mix authorization.</p></article>`).join("");
+    const allPrograms = [];
+    for (let first = 0; first < candidates.length; first += 1) {
+      for (let second = first; second < candidates.length; second += 1) {
+        const products = second === first ? [candidates[first]] : [candidates[first], candidates[second]];
+        const coverage = new Set(products.flatMap((product) => product.covered.map((use) => use.organismId)));
+        if (selected.every((target) => coverage.has(target))) allPrograms.push(products);
+      }
+    }
+    allPrograms.sort((left, right) => left.length - right.length);
+    const bestProgram = allPrograms[0];
+    const programSummary = bestProgram
+      ? bestProgram.length === 1
+        ? `<article class="card"><span class="badge verified">One-product candidate</span><h3>${bestProgram[0].brand}</h3><p>${bestProgram[0].formulation} has individual source-backed coverage for every selected target in this small dataset.</p><p><strong>Next check:</strong> pest stage, threshold, exact current label, crop stage, prior applications, and restrictions.</p></article>`
+        : `<article class="card"><span class="badge conditional">Two-product candidate program</span><h3>${bestProgram.map((product) => product.brand).join(" + ")}</h3><p>This is the smallest set of individual products with source-backed coverage for all selected targets.</p><p><strong>Same tank:</strong> not verified. Do not mix these products merely because they cover different pests.</p><p><strong>Possible path:</strong> evaluate a sequential program after checking each product's label interval, PHI, crop safety, and recent IRAC exposure. Add a documented compatibility record before this can become a tank-mix recommendation.</p></article>`
+      : "";
+    output.innerHTML = `<h3>Candidate program for your reported organisms in ${cropName}</h3><p class="muted">Selected by you: ${selectedNames.join(", ")}. Verify each identity and life stage before considering any product.</p>${uncovered.length ? `<article class="note"><strong>A complete program cannot be calculated:</strong> no documented product coverage exists in this prototype for ${organisms.filter((organism) => uncovered.includes(organism.id)).map((organism) => organism.name).join(", ")}. This is a catalog evidence gap, not proof that no treatment exists.</article>` : programSummary}<h3>Individual product evidence used</h3><div class="grid">${cards || `<article class="note">No documented product coverage was found for the selected crop and pests.</article>`}</div><article class="note"><strong>Tank-mix rule:</strong> a combination is not a same-tank recommendation until exact-product physical and chemical compatibility, label authorization, crop safety, target support, dose, and scenario restrictions are verified. Where these are unknown, the output is a candidate sequential program, not a mixing instruction.</article>`;
+  }
+  cropSelect.addEventListener("change", () => { renderTargets(); render(); });
+  button.addEventListener("click", render);
+  renderTargets();
+  render();
+</script>

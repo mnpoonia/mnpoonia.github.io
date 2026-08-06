@@ -1,0 +1,41 @@
+---
+import { crops, referenceUsesForProduct, type Product } from "../data/crop-protection";
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const uses = referenceUsesForProduct(product);
+const cropOptions = crops.filter((crop) => uses.some((use) => use.cropId === crop.id));
+---
+<section class="product-dose-tool" data-product-dose-lookup>
+  <h2>Find a Documented Dose</h2>
+  <p>Select the crop. The tool will show a dose only where this product's exact formulation has a source-backed record in the prototype.</p>
+  <label for="dose-crop"><strong>Crop</strong>
+    <select id="dose-crop" name="crop">
+      {cropOptions.map((crop) => <option value={crop.id}>{crop.name}</option>)}
+    </select>
+  </label>
+  <div class="dose-result" aria-live="polite"></div>
+</section>
+<script is:inline define:vars={{ product, uses }}>
+  const root = document.querySelector("[data-product-dose-lookup]");
+  const crop = root.querySelector('[name="crop"]');
+  const output = root.querySelector(".dose-result");
+
+  function render() {
+    const selectedCrop = crop.value;
+    const exactUses = uses.filter((use) => use.cropId === selectedCrop && use.formulation === product.formulation);
+    const componentUses = uses.filter((use) => use.cropId === selectedCrop && use.formulation !== product.formulation);
+    const cropName = crop.options[crop.selectedIndex]?.text ?? selectedCrop;
+    if (exactUses.length) {
+      output.innerHTML = exactUses.map((use) => `<article class="card"><span class="badge ${use.status}">${use.status}</span><h3>${use.target}</h3><p><strong>${use.formulation}</strong></p><p><strong>Label/reference dose:</strong> ${use.dose}<br><strong>Label/reference water:</strong> ${use.waterVolume}</p>${use.acreEquivalent ? `<p><strong>Approximate acre equivalent:</strong> ${use.acreEquivalent.dose}<br><strong>Approximate water per acre:</strong> ${use.acreEquivalent.waterVolume}</p><p class="muted">Converted from the hectare rate using 1 hectare = 2.471 acres. The source rate remains the authoritative reference.</p>` : ""}<p>${use.timing || ""}</p>${use.conditions ? `<p><strong>Conditions:</strong> ${use.conditions}</p>` : ""}<p class="muted">Check the current container label, application interval, maximum applications, PHI, and crop condition before use.</p></article>`).join("");
+      return;
+    }
+    const componentNames = product.components.map((component) => component.ingredientId).join(", ");
+    output.innerHTML = `<article class="note"><strong>No exact product dose is documented for ${product.brand} on ${cropName}.</strong><p>The prototype will not convert a dose for a single ingredient or another formulation into a dose for this product.</p>${componentUses.length ? `<p>A source-backed dose exists for a component in a different formulation: ${componentUses.map((use) => `${use.formulation} for ${use.target}`).join("; ")}. It is shown as a reference only and must not be substituted for ${product.formulation}.</p>` : ""}<p class="muted">Product ingredients: ${componentNames}. Add an exact crop-label or official source record before this page can show a dose.</p></article>`;
+  }
+  crop.addEventListener("change", render);
+  render();
+</script>

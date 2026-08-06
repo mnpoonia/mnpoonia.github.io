@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import ProductLookup from "../../../components/ProductLookup.astro";
+import { products } from "../../../data/crop-protection";
+---
+<BaseLayout title="Product Reference | Crop Protection Reference" description="Search a catalog product and see its ingredients and crop-specific documented dose records.">
+  <CropProtectionNav />
+  <p class="eyebrow">Product reference</p>
+  <h1>What does a product contain?</h1>
+  <p class="lede">Search a brand, select the catalog match, then select a crop on the product page to see only documented dose records for the exact formulation.</p>
+  <ProductLookup />
+  <section>
+    <h2>Current Prototype Catalog</h2>
+    <div class="grid">
+      {products.map((product) => <article class="card"><span class={`badge ${product.status}`}>{product.status}</span><h3><a href={`/crop-protection/products/${product.id}/`}>{product.brand}</a></h3><p>{product.manufacturer}<br /><strong>{product.formulation}</strong></p></article>)}
+    </div>
+  </section>
+  <section class="note"><strong>Strict catalog selection:</strong> an absent product means it is not in this prototype catalog. It does not prove the product is not sold or registered. The site will not accept an unselected typed product for dose or compatibility decisions.</section>
+</BaseLayout>

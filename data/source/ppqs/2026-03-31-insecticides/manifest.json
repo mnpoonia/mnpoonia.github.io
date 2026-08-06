@@ -1,0 +1,14 @@
+{
+  "source_url": "https://ppqs.gov.in/sites/default/files/updated_mup_insecticide_as_on_31.03.2026_c.pdf",
+  "published_through": "2026-03-31",
+  "downloaded_file": "source.pdf",
+  "sha256": "20fcd282d572e953815b56e8a2b83027da667ec844cf7bdfabb043daec315838",
+  "extracted_text_file": "source.txt",
+  "raw_records_file": "records.ndjson",
+  "pdf_pages": 109,
+  "records": 193,
+  "extraction": {
+    "command": "pdfjs-dist text-position extraction",
+    "policy": "Only complete single-baseline cells assigned from fixed PDF table columns are emitted. Wrapped table rows are not merged; all records are low confidence pending visual review."
+  }
+}

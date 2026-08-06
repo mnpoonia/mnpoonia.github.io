@@ -1,0 +1,41 @@
+---
+import { products } from "../data/crop-protection";
+const choices = products.filter((product) => ["sml-cypro-profenofos-40-cypermethrin-4-ec", "sml-spike-thiamethoxam-25-wg"].includes(product.id));
+---
+<section class="assessment" data-psylla-assessment>
+  <p class="eyebrow">Prototype assessment</p>
+  <h2>Should I spray again?</h2>
+  <p>This demonstration treats the result as decision support. It does not provide an application instruction or replace the current product label.</p>
+  <label>Days since the last application <input name="days" type="number" min="0" value="4" /></label>
+  <label>Population trend <select name="trend"><option value="declining">Reduced / declining</option><option value="stable">About the same</option><option value="increasing">Increasing</option></select></label>
+  <label><input name="flowering" type="checkbox" /> The orchard is flowering</label>
+  <label><input name="waterStress" type="checkbox" /> The orchard is water-stressed</label>
+  <fieldset><legend>Products used previously</legend>
+    {choices.map((product) => <label><input type="checkbox" name="prior" value={product.id} /> {product.brand}: {product.formulation}</label>)}
+  </fieldset>
+  <button type="button">Assess this situation</button>
+  <div class="result" aria-live="polite" hidden></div>
+</section>
+<script>
+  import { assessKinnowPsylla } from "../lib/recommendations";
+  const root = document.querySelector<HTMLElement>("[data-psylla-assessment]");
+  if (!root) throw new Error("Psylla assessment root is missing");
+  const button = root.querySelector<HTMLButtonElement>("button");
+  const result = root.querySelector<HTMLElement>(".result");
+  const daysInput = root.querySelector<HTMLInputElement>('[name="days"]');
+  const trendInput = root.querySelector<HTMLSelectElement>('[name="trend"]');
+  const floweringInput = root.querySelector<HTMLInputElement>('[name="flowering"]');
+  const waterStressInput = root.querySelector<HTMLInputElement>('[name="waterStress"]');
+  if (!button || !result || !daysInput || !trendInput || !floweringInput || !waterStressInput) throw new Error("Psylla assessment controls are missing");
+  button.addEventListener("click", () => {
+    const days = Number(daysInput.value);
+    const trend = trendInput.value as "declining" | "stable" | "increasing";
+    const flowering = floweringInput.checked;
+    const waterStress = waterStressInput.checked;
+    const priorProductIds = [...root.querySelectorAll<HTMLInputElement>('[name="prior"]:checked')].map((input) => input.value);
+    const assessment = assessKinnowPsylla({ daysSinceApplication: days, populationTrend: trend, flowering, waterStress, priorProductIds });
+    const rows = assessment.candidates.map((candidate) => `<tr><td>${candidate.product.formulation}</td><td>${candidate.status}</td><td>${candidate.reason}</td></tr>`).join("");
+    result.hidden = false;
+    result.innerHTML = `<h3>Assessment</h3><p>${assessment.followUp}</p><p><strong>Recent IRAC exposure:</strong> ${assessment.groupLabels.length ? assessment.groupLabels.join(", ") : "not recorded"}</p><table><thead><tr><th>Reference option</th><th>Status</th><th>Why</th></tr></thead><tbody>${rows}</tbody></table><p><strong>Before any application:</strong> confirm the pest stage and counts, exact previous formulations and dose, rain and coverage, current container-label interval, flowering, water stress, and local advice.</p>`;
+  });
+</script>

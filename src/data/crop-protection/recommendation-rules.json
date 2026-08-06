@@ -1,0 +1,22 @@
+[
+  {
+    "id": "kinnow-psyllid-reassess-declining-day-four",
+    "scope": { "cropId": "kinnow", "organismId": "asian-citrus-psyllid" },
+    "inputs": ["days-since-application", "population-trend"],
+    "condition": "Population is declining and only four days or fewer have elapsed since the application.",
+    "effect": "monitor",
+    "explanation": "Record comparable counts and reassess around day 7; this is an assessment date, not an automatic spray date.",
+    "sourceIds": ["pau-fruits-2024"],
+    "evidenceStatus": "conditional"
+  },
+  {
+    "id": "kinnow-psyllid-oil-conditions",
+    "scope": { "cropId": "kinnow", "organismId": "asian-citrus-psyllid" },
+    "inputs": ["flowering", "water-stress"],
+    "condition": "Oil-based treatment is being evaluated while flowering or water stress is reported.",
+    "effect": "conditional",
+    "explanation": "Do not treat oil-based options as eligible until flowering and water-stress restrictions are resolved.",
+    "sourceIds": ["pau-fruits-2024"],
+    "evidenceStatus": "conditional"
+  }
+]
