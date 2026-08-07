@@ -1,38 +1,136 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import CropProtectionNav from "../../../components/CropProtectionNav.astro";
-import { crops } from "../../../data/crop-protection";
+import { crops, formulations, products } from "../../../data/crop-protection";
+
+const catalogProducts = products.map((product) => ({ id: product.id, brand: product.brand, formulationId: product.formulationId, formulation: product.formulation, manufacturer: product.manufacturer }));
+const catalogFormulations = formulations.map((formulation) => ({ id: formulation.id, name: formulation.name }));
 ---
-<BaseLayout title="Contribute Reference Data | Crop Protection Reference" description="Create a structured crop-protection reference entry for review.">
+<BaseLayout title="Contribute Reference Data | Crop Protection Reference" description="Submit a field observation, product detail, or expert recommendation for review.">
   <CropProtectionNav />
-  <header class="page-intro"><p class="eyebrow">Contributor worksheet</p><h1>Send one source-backed use at a time.</h1><p class="lede">This form does not publish anything. It creates a plain-text record your reviewer can verify against the product label or official source before adding it to the site.</p></header>
+  <header class="page-intro"><p class="eyebrow">Contributor worksheet</p><h1>Send one useful field record at a time.</h1><p class="lede">Farmers can report observations, retailers can correct product information, and experts can submit scoped field guidance. Nothing publishes automatically.</p></header>
   <section class="contribution-form" data-contribution-form>
+    <label class="contributor-role">I am contributing as<select name="contributorRole"><option value="farmer">Farmer</option><option value="retailer">Pesticide retailer</option><option value="manufacturer">Manufacturer / product company</option><option value="expert">Scientist / extension expert</option></select></label>
+    <p class="contribution-role-note" data-role-note></p>
     <div class="contribution-grid">
       <label>Crop<select name="crop"><option value="">Select crop</option>{crops.map((crop) => <option>{crop.name}</option>)}</select></label>
-      <label>Source crop category (if different)<input name="sourceCrop" placeholder="Example: Citrus" /></label>
-      <label>Target / pest / disease<input name="target" placeholder="Example: Citrus psylla" /></label>
-      <label>Target type<select name="targetType"><option>Insect pest</option><option>Mite</option><option>Disease</option><option>Weed</option><option>Other / unknown</option></select></label>
-      <label>Formulation<input name="formulation" placeholder="Example: Thiamethoxam 25% WG" /></label>
-      <label>Brand / product, if exact label seen<input name="product" placeholder="Optional" /></label>
-      <label>Dose<input name="dose" placeholder="Include unit and area" /></label>
-      <label>Water / dilution<input name="water" placeholder="Include unit" /></label>
-      <label>Waiting period / PHI<input name="phi" placeholder="Optional" /></label>
-      <label>Application method / crop stage<textarea name="method" rows="2" placeholder="Optional, but useful" /></label>
-      <label>Source title and page<label class="hint">Official document, label version, or a clear photo reference</label><textarea name="source" rows="2" /></label>
-      <label>Source URL or file name<textarea name="url" rows="2" /></label>
+      <label>Target / pest / disease<input name="target" placeholder="Example: Citrus psylla or collar rot" /></label>
+      <label>Target type<select name="targetType"><option>Insect pest</option><option>Mite</option><option>Disease</option><option>Weed</option><option>Nutrient disorder</option><option>Other / unknown</option></select></label>
+
+      <label data-roles="farmer expert">Location / geography<input name="geography" placeholder="Example: Abohar, Punjab" /></label>
+      <label data-roles="farmer expert">Crop stage or orchard age<input name="cropStage" placeholder="Example: tender flush / 5-year orchard" /></label>
+      <label class="wide" data-roles="farmer expert">What was observed?<textarea name="observation" rows="3" placeholder="Plant part, symptom, spread, date, weather, irrigation, and photos if available" /></label>
+
+      <fieldset class="contribution-fieldset" data-roles="expert"><legend>Expert field recommendation</legend>
+        <label>Expert name and role<input name="expertIdentity" placeholder="Name, role, and organization" /></label>
+        <label>Recommendation type<select name="recommendationType"><option value="monitoring">Monitoring / diagnosis</option><option value="nonchemical">Nonchemical management</option><option value="expert-confirmation">Escalate / expert confirmation</option><option value="chemical">Chemical treatment evidence to review</option></select></label>
+        <label class="wide">Recommendation<textarea name="recommendation" rows="3" placeholder="State the practical action and when it is appropriate" /></label>
+        <label class="wide">Field basis and rationale<textarea name="fieldBasis" rows="3" placeholder="Observed pattern, trial or extension experience, comparison, and why this action is suitable for this scope" /></label>
+        <label class="wide">Limitations and uncertainty<textarea name="limitations" rows="2" placeholder="Where this may not apply, look-alikes, and when to stop or confirm diagnosis" /></label>
+        <label>Supporting source, protocol, or record<input name="expertEvidence" placeholder="Optional: source, field notebook, trial ID, or extension record" /></label>
+        <label>Review contact / link<input name="reviewContact" placeholder="Professional contact or public profile" /></label>
+        <p class="expert-safety-note wide">Expert field guidance may be submitted without a journal source. It will be attributed and reviewed. A pesticide dose, tank mix, PHI, REI, interval, or product authorization cannot be published from expert opinion alone; attach the exact current label evidence instead.</p>
+      </fieldset>
+
+      <fieldset class="contribution-fieldset" data-roles="retailer manufacturer expert"><legend>Exact product or label evidence</legend>
+        <label>Known catalog product<select name="catalogProduct" data-catalog-product><option value="">Not listed / new product</option>{products.map((product) => <option value={product.id}>{product.brand} · {product.formulation}</option>)}</select></label>
+        <label>Known formulation<select name="formulationId" data-catalog-formulation><option value="">Select an existing formulation</option>{formulations.map((formulation) => <option value={formulation.id}>{formulation.name}</option>)}</select></label>
+        <label>Brand / product<input name="product" data-product-name placeholder="Exact package name" /></label>
+        <label>Formulation<input name="formulation" data-formulation placeholder="Auto-filled from catalog selection" readonly /></label>
+        <label>Manufacturer<input name="manufacturer" data-manufacturer placeholder="Manufacturer shown on package" /></label>
+        <label>Label version / date<input name="labelVersion" placeholder="Version, date, or package photo date" /></label>
+        <label>Source crop category (if different)<input name="sourceCrop" placeholder="Example: Citrus" /></label>
+        <label>Dose<input name="dose" placeholder="Include unit and area" /></label>
+        <label>Water / dilution<input name="water" placeholder="Include unit" /></label>
+        <label>Waiting period / PHI<input name="phi" placeholder="Optional" /></label>
+        <label>Application method / crop stage<textarea name="method" rows="2" placeholder="Optional, but useful" /></label>
+        <label>Source title and page<label class="hint">Official document, label version, or clear package image</label><textarea name="source" rows="2" /></label>
+        <label>Source URL or file name<textarea name="url" rows="2" /></label>
+        <label class="formulation-request-toggle"><input type="checkbox" name="needsFormulation" data-needs-formulation /> The formulation is new or missing from the catalog</label>
+        <fieldset class="formulation-request" data-formulation-request hidden><legend>New formulation request</legend>
+          <p class="wide">Use this only when no catalog formulation exists. This requests a formulation record for review; it does not create a crop-use recommendation.</p>
+          <label>Full formulation name<input name="newFormulationName" placeholder="Example: Active ingredient 25% WG" /></label>
+          <label>Active ingredients and concentration<textarea name="newFormulationComponents" rows="2" placeholder="Example: Thiamethoxam 25%" /></label>
+          <label>Formulation code<input name="newFormulationCode" placeholder="Example: WG, SC, EC, SL" /></label>
+          <label>Package / label photo or official source<input name="newFormulationEvidence" placeholder="URL, file name, or photo reference" /></label>
+        </fieldset>
+      </fieldset>
       <label class="wide">Notes / uncertainty<textarea name="notes" rows="3" placeholder="What needs review? Do not guess missing values." /></label>
     </div>
-    <div class="contribution-actions"><button type="button" data-export>Copy structured record</button><a data-email href="mailto:?subject=Crop%20protection%20reference%20entry">Email record</a></div>
+    <div class="contribution-actions"><button type="button" data-export>Copy structured record</button><a data-email href="mailto:aman.poonia.29@gmail.com?subject=Crop%20protection%20reference%20entry">Email record</a></div>
     <pre class="contribution-output" aria-live="polite">Fill the fields to preview a review record.</pre>
   </section>
 </BaseLayout>
-<script is:inline>
+<script is:inline define:vars={{ catalogProducts, catalogFormulations }}>
   const root = document.querySelector("[data-contribution-form]");
   const fields = [...root.querySelectorAll("input, select, textarea")];
   const output = root.querySelector(".contribution-output");
   const email = root.querySelector("[data-email]");
-  function record() { return Object.fromEntries(fields.map((field) => [field.name, field.value.trim()])); }
-  function render() { const data = record(); const text = Object.entries(data).filter(([, value]) => value).map(([key, value]) => `${key}: ${value}`).join("\n") || "Fill the fields to preview a review record."; output.textContent = text; email.href = `mailto:?subject=${encodeURIComponent("Crop protection reference entry")}&body=${encodeURIComponent(text)}`; return text; }
+  const role = root.querySelector('[name="contributorRole"]');
+  const catalogProduct = root.querySelector("[data-catalog-product]");
+  const productName = root.querySelector("[data-product-name]");
+  const formulation = root.querySelector("[data-formulation]");
+  const manufacturer = root.querySelector("[data-manufacturer]");
+  const needsFormulation = root.querySelector("[data-needs-formulation]");
+  const formulationRequest = root.querySelector("[data-formulation-request]");
+  const catalogFormulation = root.querySelector("[data-catalog-formulation]");
+  const roleNote = root.querySelector("[data-role-note]");
+  const roleNotes = {
+    farmer: "Share a field observation. Photos, location, crop stage, and follow-up are more useful than a guessed diagnosis or product name.",
+    retailer: "Share exact package and label details. A matching ingredient never proves a crop use for a different brand or formulation.",
+    manufacturer: "For a new launch, submit the exact product identity and the current approved label or leaflet that names this crop and disease. The record goes to review; it does not publish automatically.",
+    expert: "Submit local field guidance with scope, rationale, and limits. It will be attributed and reviewed before publication.",
+  };
+  function visibleForRole(field) { const roles = field.dataset.roles; return !roles || roles.split(" ").includes(role.value); }
+  function updateRole() {
+    root.querySelectorAll("[data-roles]").forEach((field) => { field.hidden = !visibleForRole(field); });
+    roleNote.textContent = roleNotes[role.value];
+  }
+  function updateProduct() {
+    const product = catalogProducts.find((item) => item.id === catalogProduct.value);
+    if (product) {
+      productName.value = product.brand;
+      formulation.value = product.formulation;
+      manufacturer.value = product.manufacturer;
+      catalogFormulation.value = product.formulationId;
+      catalogFormulation.disabled = true;
+      needsFormulation.checked = false;
+      needsFormulation.disabled = true;
+      formulationRequest.hidden = true;
+    } else {
+      catalogFormulation.disabled = false;
+      needsFormulation.disabled = false;
+      productName.value = "";
+      manufacturer.value = "";
+      updateFormulation();
+    }
+  }
+  function updateFormulation() {
+    const selectedFormulation = catalogFormulations.find((item) => item.id === catalogFormulation.value);
+    formulation.value = selectedFormulation ? selectedFormulation.name : "";
+    needsFormulation.checked = false;
+    needsFormulation.disabled = Boolean(selectedFormulation);
+    formulationRequest.hidden = true;
+  }
+  function updateFormulationRequest() { formulationRequest.hidden = !needsFormulation.checked; }
+  function record() { return Object.fromEntries(fields.filter((field) => visibleForRole(field) && field.name).map((field) => [field.name, field.value.trim()])); }
+  function render() {
+    const data = record();
+    const chemicalWarning = data.contributorRole === "expert" && data.recommendationType === "chemical"
+      ? "\n\nREVIEW GATE: Chemical treatment evidence requires the exact current product label. Do not publish a dose, PHI, REI, interval, tank mix, or authorization from expert opinion alone."
+      : "";
+    const text = Object.entries(data).filter(([, value]) => value).map(([key, value]) => `${key}: ${value}`).join("\n") || "Fill the fields to preview a review record.";
+    output.textContent = `${text}${chemicalWarning}`;
+    email.href = `mailto:aman.poonia.29@gmail.com?subject=${encodeURIComponent(`${data.contributorRole || "Crop protection"} contribution for review`)}&body=${encodeURIComponent(output.textContent)}`;
+    return output.textContent;
+  }
+  role.addEventListener("change", () => { updateRole(); render(); });
+  catalogProduct.addEventListener("change", () => { updateProduct(); render(); });
+  catalogFormulation.addEventListener("change", () => { updateFormulation(); render(); });
+  needsFormulation.addEventListener("change", () => { updateFormulationRequest(); render(); });
   fields.forEach((field) => field.addEventListener("input", render));
+  updateRole();
+  updateProduct();
+  updateFormulationRequest();
   root.querySelector("[data-export]").addEventListener("click", async () => { await navigator.clipboard.writeText(render()); root.querySelector("[data-export]").textContent = "Copied"; });
 </script>
