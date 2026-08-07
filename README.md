@@ -190,7 +190,9 @@ Read [`docs/crop-protection-data.md`](docs/crop-protection-data.md) before autho
 
 ## Contribution Routes
 
-The public contributor page is at `/crop-protection/contribute/`. It copies a structured handoff or opens a pre-addressed email to `aman.poonia.29@gmail.com` for editorial review; it does not publish changes automatically.
+The public contributor page is at `/crop-protection/contribute/`. It uses catalog-backed crop, target, geography, product, and formulation selectors where the records exist. It copies a structured handoff or opens a pre-addressed email to `aman.poonia.29@gmail.com` for editorial review; it does not publish changes automatically.
+
+The email action uses a `mailto:` link. It works on phones and desktops with a configured mail app, but cannot send automatically or attach files. The Copy action is the reliable fallback for long records, photos, or devices without a configured mail client.
 
 - **Farmers:** submit what was observed, where on the plant, crop stage, date, photos, local name, and what changed after follow-up.
 - **Retailers:** submit a package image, full product name, manufacturer, exact formulation, label version/date, and a direct manufacturer or regulatory link where available.

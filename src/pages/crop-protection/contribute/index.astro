@@ -1,10 +1,14 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import CropProtectionNav from "../../../components/CropProtectionNav.astro";
-import { crops, formulations, products } from "../../../data/crop-protection";
+import { cropOrganismOccurrences, crops, formulations, geographies, organisms, products } from "../../../data/crop-protection";
 
 const catalogProducts = products.map((product) => ({ id: product.id, brand: product.brand, formulationId: product.formulationId, formulation: product.formulation, manufacturer: product.manufacturer }));
 const catalogFormulations = formulations.map((formulation) => ({ id: formulation.id, name: formulation.name }));
+const targetOptions = cropOrganismOccurrences.map((occurrence) => {
+  const organism = organisms.find((item) => item.id === occurrence.organismId);
+  return organism && { cropId: occurrence.cropId, id: organism.id, name: organism.name, type: organism.type };
+}).filter(Boolean);
 ---
 <BaseLayout title="Contribute Reference Data | Crop Protection Reference" description="Submit a field observation, product detail, or expert recommendation for review.">
   <CropProtectionNav />
@@ -13,11 +17,12 @@ const catalogFormulations = formulations.map((formulation) => ({ id: formulation
     <label class="contributor-role">I am contributing as<select name="contributorRole"><option value="farmer">Farmer</option><option value="retailer">Pesticide retailer</option><option value="manufacturer">Manufacturer / product company</option><option value="expert">Scientist / extension expert</option></select></label>
     <p class="contribution-role-note" data-role-note></p>
     <div class="contribution-grid">
-      <label>Crop<select name="crop"><option value="">Select crop</option>{crops.map((crop) => <option>{crop.name}</option>)}</select></label>
-      <label>Target / pest / disease<input name="target" placeholder="Example: Citrus psylla or collar rot" /></label>
-      <label>Target type<select name="targetType"><option>Insect pest</option><option>Mite</option><option>Disease</option><option>Weed</option><option>Nutrient disorder</option><option>Other / unknown</option></select></label>
+      <label>Crop<select name="crop" data-crop><option value="">Select crop</option>{crops.map((crop) => <option value={crop.id}>{crop.name}</option>)}</select></label>
+      <label>Known target<select name="targetId" data-target disabled><option value="">Select crop first</option></select></label>
+      <label>Target / pest / disease<input name="target" data-target-name placeholder="Auto-filled, or enter a new target" /></label>
+      <label>Target type<select name="targetType" data-target-type><option value="">Select or auto-fill</option><option value="insect pest">Insect pest</option><option value="mite">Mite</option><option value="disease">Disease</option><option value="weed">Weed</option><option value="nutrient disorder">Nutrient disorder</option><option value="physiological disorder">Physiological disorder</option><option value="abiotic injury">Abiotic injury</option><option value="other / unknown">Other / unknown</option></select></label>
 
-      <label data-roles="farmer expert">Location / geography<input name="geography" placeholder="Example: Abohar, Punjab" /></label>
+      <label data-roles="farmer expert">Location / geography<select name="geography" data-geography><option value="">Select location or enter in notes</option>{geographies.map((geography) => <option value={geography.id}>{geography.name} ({geography.type})</option>)}</select></label>
       <label data-roles="farmer expert">Crop stage or orchard age<input name="cropStage" placeholder="Example: tender flush / 5-year orchard" /></label>
       <label class="wide" data-roles="farmer expert">What was observed?<textarea name="observation" rows="3" placeholder="Plant part, symptom, spread, date, weather, irrigation, and photos if available" /></label>
 
@@ -57,16 +62,21 @@ const catalogFormulations = formulations.map((formulation) => ({ id: formulation
       </fieldset>
       <label class="wide">Notes / uncertainty<textarea name="notes" rows="3" placeholder="What needs review? Do not guess missing values." /></label>
     </div>
-    <div class="contribution-actions"><button type="button" data-export>Copy structured record</button><a data-email href="mailto:aman.poonia.29@gmail.com?subject=Crop%20protection%20reference%20entry">Email record</a></div>
+    <div class="contribution-actions"><button type="button" data-export>Copy structured record</button><a data-email href="mailto:aman.poonia.29@gmail.com?subject=Crop%20protection%20reference%20entry">Open email draft</a></div>
+    <p class="contribution-handoff">On a phone, “Open email draft” uses the device’s configured mail app. If it does not open or the record is long, use “Copy structured record” and paste it into an email to aman.poonia.29@gmail.com.</p>
     <pre class="contribution-output" aria-live="polite">Fill the fields to preview a review record.</pre>
   </section>
 </BaseLayout>
-<script is:inline define:vars={{ catalogProducts, catalogFormulations }}>
+<script is:inline define:vars={{ catalogFormulations, catalogProducts, targetOptions }}>
   const root = document.querySelector("[data-contribution-form]");
   const fields = [...root.querySelectorAll("input, select, textarea")];
   const output = root.querySelector(".contribution-output");
   const email = root.querySelector("[data-email]");
   const role = root.querySelector('[name="contributorRole"]');
+  const crop = root.querySelector("[data-crop]");
+  const target = root.querySelector("[data-target]");
+  const targetName = root.querySelector("[data-target-name]");
+  const targetType = root.querySelector("[data-target-type]");
   const catalogProduct = root.querySelector("[data-catalog-product]");
   const productName = root.querySelector("[data-product-name]");
   const formulation = root.querySelector("[data-formulation]");
@@ -85,6 +95,29 @@ const catalogFormulations = formulations.map((formulation) => ({ id: formulation
   function updateRole() {
     root.querySelectorAll("[data-roles]").forEach((field) => { field.hidden = !visibleForRole(field); });
     roleNote.textContent = roleNotes[role.value];
+  }
+  function updateTargets() {
+    const matches = targetOptions.filter((item) => item.cropId === crop.value);
+    target.innerHTML = '<option value="">New or not listed</option>';
+    for (const item of matches) {
+      const option = document.createElement("option");
+      option.value = item.id;
+      option.textContent = `${item.name} (${item.type})`;
+      target.append(option);
+    }
+    target.disabled = !crop.value;
+    targetName.value = "";
+    targetType.value = "";
+  }
+  function updateTarget() {
+    const selectedTarget = targetOptions.find((item) => item.id === target.value && item.cropId === crop.value);
+    if (selectedTarget) {
+      targetName.value = selectedTarget.name;
+      targetType.value = selectedTarget.type;
+      targetName.readOnly = true;
+    } else {
+      targetName.readOnly = false;
+    }
   }
   function updateProduct() {
     const product = catalogProducts.find((item) => item.id === catalogProduct.value);
@@ -125,11 +158,14 @@ const catalogFormulations = formulations.map((formulation) => ({ id: formulation
     return output.textContent;
   }
   role.addEventListener("change", () => { updateRole(); render(); });
+  crop.addEventListener("change", () => { updateTargets(); render(); });
+  target.addEventListener("change", () => { updateTarget(); render(); });
   catalogProduct.addEventListener("change", () => { updateProduct(); render(); });
   catalogFormulation.addEventListener("change", () => { updateFormulation(); render(); });
   needsFormulation.addEventListener("change", () => { updateFormulationRequest(); render(); });
   fields.forEach((field) => field.addEventListener("input", render));
   updateRole();
+  updateTargets();
   updateProduct();
   updateFormulationRequest();
   root.querySelector("[data-export]").addEventListener("click", async () => { await navigator.clipboard.writeText(render()); root.querySelector("[data-export]").textContent = "Copied"; });
