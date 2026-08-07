@@ -188,6 +188,14 @@ The crop pages are data driven. New data should not require a crop-specific page
 
 Read [`docs/crop-protection-data.md`](docs/crop-protection-data.md) before authoring crop-reference records. It documents evidence states, source boundaries, and the distinction between formulation references and exact product labels.
 
+## Plans And Design Work
+
+Durable implementation guidance lives in [`docs/`](docs/). Active product planning, research, contribution-review design, and future architecture work live in [`dev/`](dev/).
+
+- [`docs/README.md`](docs/README.md) explains the current documentation set.
+- [`dev/roadmap.md`](dev/roadmap.md) contains the next product and engineering phases.
+- [`dev/contribution-intake.md`](dev/contribution-intake.md) describes the proposed Supabase intake and review boundary.
+
 ## Contribution Routes
 
 The public contributor page is at `/crop-protection/contribute/`. It uses catalog-backed crop, target, geography, product, and formulation selectors where the records exist. It copies a structured handoff or opens a pre-addressed email to `aman.poonia.29@gmail.com` for editorial review; it does not publish changes automatically.
