@@ -38,9 +38,15 @@ The generated pages are available for every record at:
 /crop-protection/organisms/<organism-id>/
 ```
 
+## Farmer-Selected Disease Or Pest
+
+Recommendation requests store a farmer-selected crop, organism, optional stage, severity, observation date, and prior applications. The selected diagnosis is the working scenario. Record whether it was `user-selected`, chosen through the `image-guide`, or `expert-confirmed`, but do not require an image or laboratory confirmation before showing relevant formulation records.
+
 ## PPQS Major-Use Import Rule
 
 The PPQS major-use table is formulation-level evidence. Record it in `uses/` with its PDF page and published table details, but do not use it as proof that a specific commercial brand has the same current statutory leaflet. Brand-level label records in `label-uses.json` must remain `unverified` until the exact product label, version, and directions have been checked.
+
+The raw PPQS import lives at `data/source/ppqs/2026-03-31-insecticides/records.ndjson` and is viewable at `/crop-protection/imports/ppqs-2026/`. Do not edit it manually. Re-run `npm run import:ppqs-insecticides`, review the cited page, then promote a row into a normalized `uses/` record.
 
 ## Add A Product Or Ingredient
 

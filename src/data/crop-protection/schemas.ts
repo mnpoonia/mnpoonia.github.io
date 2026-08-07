@@ -159,6 +159,46 @@ export const recommendationRuleSchema = z.object({
   evidenceStatus: evidenceStatusSchema,
 });
 
+// A farmer-selected pest/disease and stage is the working scenario. The image
+// guide can help select it, but does not block formulation recommendations.
+export const recommendationRequestSchema = z.object({
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  geographyId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  stageId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  diagnosisSource: z.enum(["user-selected", "image-guide", "expert-confirmed"]),
+  severity: z.enum(["low", "medium", "high", "unknown"]),
+  observedOn: z.string().date(),
+  priorApplications: z.array(z.object({
+    productId: z.string().regex(/^[a-z0-9-]+$/),
+    appliedOn: z.string().date(),
+  })).default([]),
+  advanced: z.object({
+    cropStage: z.string().optional(),
+    temperatureC: z.number().optional(),
+    relativeHumidityPercent: z.number().min(0).max(100).optional(),
+    rainfallAfterApplication: z.boolean().optional(),
+    flowering: z.boolean().optional(),
+    waterStress: z.boolean().optional(),
+  }).default({}),
+});
+
+export const sourceImportRecordSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  sourceId: z.string().regex(/^[a-z0-9-]+$/),
+  formulationHeadingRaw: z.string().min(1),
+  cropRaw: z.string().min(1),
+  pestRaw: z.string().min(1),
+  activeIngredientDoseRaw: z.string().min(1).nullable(),
+  doseRaw: z.string().min(1),
+  waterRaw: z.string().min(1),
+  phiRaw: z.string().min(1),
+  pdfPage: z.number().int().positive(),
+  confidence: z.enum(["high", "medium", "low"]),
+  reviewStatus: z.enum(["unreviewed", "reviewed", "promoted", "rejected"]),
+  flags: z.array(z.string()).default([]),
+});
+
 export const referenceUseSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   ingredientId: z.string().regex(/^[a-z0-9-]+$/),
@@ -190,4 +230,6 @@ export type ThresholdRecord = z.infer<typeof thresholdSchema>;
 export type LabelUseRecord = z.infer<typeof labelUseSchema>;
 export type CompatibilityRecord = z.infer<typeof compatibilitySchema>;
 export type RecommendationRuleRecord = z.infer<typeof recommendationRuleSchema>;
+export type RecommendationRequest = z.infer<typeof recommendationRequestSchema>;
+export type SourceImportRecord = z.infer<typeof sourceImportRecordSchema>;
 export type ReferenceUseRecord = z.infer<typeof referenceUseSchema>;

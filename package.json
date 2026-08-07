@@ -8,7 +8,7 @@
     "preview": "astro preview",
     "validate": "tsx scripts/validate-data.ts",
     "import:ppqs-insecticides": "node scripts/import-ppqs-insecticides.mjs",
-    "test": "tsx --test src/lib/recommendations.test.ts"
+    "test": "tsx --test src/lib/recommendations.test.ts scripts/ppqs-pilot.test.ts"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.4",

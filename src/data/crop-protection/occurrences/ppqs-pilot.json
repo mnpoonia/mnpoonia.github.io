@@ -1,0 +1,6 @@
+[
+  { "id": "rose-red-spider-mite-occurrence", "cropId": "rose", "organismId": "red-spider-mite", "monitoringNote": "Confirm mites and crop condition before considering a formulation." },
+  { "id": "grapes-mites-occurrence", "cropId": "grapes", "organismId": "grape-mites", "monitoringNote": "Confirm active mite presence before considering a formulation." },
+  { "id": "apple-red-spider-mite-occurrence", "cropId": "apple", "organismId": "apple-red-spider-mite", "monitoringNote": "Confirm mite identification and orchard spray volume before considering a formulation." },
+  { "id": "tomato-red-spider-mite-leafminer-occurrence", "cropId": "tomato", "organismId": "tomato-red-spider-mite-leafminer", "monitoringNote": "Confirm the target and crop stage before considering a formulation." }
+]

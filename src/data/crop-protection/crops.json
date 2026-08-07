@@ -9,5 +9,25 @@
     "id": "cotton",
     "name": "Cotton",
     "aliases": []
+  },
+  {
+    "id": "rose",
+    "name": "Rose",
+    "aliases": ["Ornamental rose"]
+  },
+  {
+    "id": "grapes",
+    "name": "Grapes",
+    "aliases": []
+  },
+  {
+    "id": "apple",
+    "name": "Apple",
+    "aliases": []
+  },
+  {
+    "id": "tomato",
+    "name": "Tomato",
+    "aliases": []
   }
 ]

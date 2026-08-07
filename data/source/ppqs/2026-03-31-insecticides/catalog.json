@@ -1,0 +1,161 @@
+{
+  "sourceId": "ppqs-major-uses-2026",
+  "status": "unreviewed-pilot",
+  "formulations": [
+    {
+      "id": "ppqs-formulation-abamectin-01-90-ec",
+      "nameRaw": "Abamectin 01.90 % EC",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00004"
+      ]
+    },
+    {
+      "id": "ppqs-formulation-acequinocyl-15-w-v-sc",
+      "nameRaw": "Acequinocyl 15% w/v SC",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00005"
+      ]
+    }
+  ],
+  "crops": [
+    {
+      "id": "ppqs-crop-rose-ornamental",
+      "nameRaw": "Rose(Ornamental)",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00001"
+      ]
+    },
+    {
+      "id": "ppqs-crop-grapes",
+      "nameRaw": "Grapes",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00002"
+      ]
+    },
+    {
+      "id": "ppqs-crop-apple",
+      "nameRaw": "Apple",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00003"
+      ]
+    },
+    {
+      "id": "ppqs-crop-tomato",
+      "nameRaw": "Tomato",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00004"
+      ]
+    },
+    {
+      "id": "ppqs-crop-rose",
+      "nameRaw": "Rose",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00005"
+      ]
+    }
+  ],
+  "targets": [
+    {
+      "id": "ppqs-target-red-spider-mites-tetranychus-urticae",
+      "nameRaw": "Red spider mites( Tetranychus urticae )",
+      "type": "unclassified",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00001"
+      ]
+    },
+    {
+      "id": "ppqs-target-mites",
+      "nameRaw": "Mites",
+      "type": "unclassified",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00002"
+      ]
+    },
+    {
+      "id": "ppqs-target-european-red-mite-and-spotted-red-spider-mite",
+      "nameRaw": "European Red Mite and Spotted Red Spider Mite",
+      "type": "unclassified",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00003"
+      ]
+    },
+    {
+      "id": "ppqs-target-red-spider-mites-and-leaf-miner",
+      "nameRaw": "Red spider mites and Leaf Miner",
+      "type": "unclassified",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00004"
+      ]
+    },
+    {
+      "id": "ppqs-target-two-spotted-mites-tetranychus-urticae",
+      "nameRaw": "Two spotted mites ( Tetranychus urticae )",
+      "type": "unclassified",
+      "sourceRecordIds": [
+        "ppqs-insecticide-00005"
+      ]
+    }
+  ],
+  "uses": [
+    {
+      "id": "ppqs-use-00001",
+      "sourceRecordId": "ppqs-insecticide-00001",
+      "formulationId": "ppqs-formulation-abamectin-01-90-ec",
+      "cropId": "ppqs-crop-rose-ornamental",
+      "targetId": "ppqs-target-red-spider-mites-tetranychus-urticae",
+      "activeIngredientDoseRaw": "0.00048- 0.00096%",
+      "formulationDoseRaw": "0.025- 0.050%",
+      "waterRaw": "500",
+      "waitingPeriodRaw": "03",
+      "reviewStatus": "unreviewed"
+    },
+    {
+      "id": "ppqs-use-00002",
+      "sourceRecordId": "ppqs-insecticide-00002",
+      "formulationId": "ppqs-formulation-abamectin-01-90-ec",
+      "cropId": "ppqs-crop-grapes",
+      "targetId": "ppqs-target-mites",
+      "activeIngredientDoseRaw": "0.014/L",
+      "formulationDoseRaw": "0.75 ml/L water",
+      "waterRaw": "500 – 1000",
+      "waitingPeriodRaw": "03",
+      "reviewStatus": "unreviewed"
+    },
+    {
+      "id": "ppqs-use-00003",
+      "sourceRecordId": "ppqs-insecticide-00003",
+      "formulationId": "ppqs-formulation-abamectin-01-90-ec",
+      "cropId": "ppqs-crop-apple",
+      "targetId": "ppqs-target-european-red-mite-and-spotted-red-spider-mite",
+      "activeIngredientDoseRaw": "0.00095%",
+      "formulationDoseRaw": "0.05%",
+      "waterRaw": "6-7 litre water/ tree",
+      "waitingPeriodRaw": "7",
+      "reviewStatus": "unreviewed"
+    },
+    {
+      "id": "ppqs-use-00004",
+      "sourceRecordId": "ppqs-insecticide-00004",
+      "formulationId": "ppqs-formulation-abamectin-01-90-ec",
+      "cropId": "ppqs-crop-tomato",
+      "targetId": "ppqs-target-red-spider-mites-and-leaf-miner",
+      "activeIngredientDoseRaw": "8.6 – 11.4",
+      "formulationDoseRaw": "450 - 600",
+      "waterRaw": "500",
+      "waitingPeriodRaw": "3",
+      "reviewStatus": "unreviewed"
+    },
+    {
+      "id": "ppqs-use-00005",
+      "sourceRecordId": "ppqs-insecticide-00005",
+      "formulationId": "ppqs-formulation-acequinocyl-15-w-v-sc",
+      "cropId": "ppqs-crop-rose",
+      "targetId": "ppqs-target-two-spotted-mites-tetranychus-urticae",
+      "activeIngredientDoseRaw": "75g",
+      "formulationDoseRaw": "500 ml",
+      "waterRaw": "500L",
+      "waitingPeriodRaw": "10 days",
+      "reviewStatus": "unreviewed"
+    }
+  ]
+}

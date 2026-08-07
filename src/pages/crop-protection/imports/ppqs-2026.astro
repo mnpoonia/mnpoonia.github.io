@@ -1,0 +1,66 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import { sourceFor } from "../../../data/crop-protection";
+import { readPpqsCatalog, readPpqsImportRecords } from "../../../data/crop-protection/ppqs-import";
+
+const source = sourceFor("ppqs-major-uses-2026");
+const records = readPpqsImportRecords();
+const catalog = readPpqsCatalog();
+const byPage = new Set(records.map((record) => record.pdfPage)).size;
+const formulations = [...records.reduce((groups, record) => {
+  const group = groups.get(record.formulationHeadingRaw) ?? [];
+  group.push(record);
+  groups.set(record.formulationHeadingRaw, group);
+  return groups;
+}, new Map<string, typeof records>())].sort(([left], [right]) => left.localeCompare(right));
+---
+<BaseLayout title="PPQS Insecticide Import | Crop Protection Reference" description="Raw PPQS insecticide major-use import and promotion status.">
+  <CropProtectionNav />
+  <p class="eyebrow">Source import</p>
+  <h1>PPQS insecticide major-use import</h1>
+  <p class="lede">This formulation-first review queue preserves the source candidates needed to create crop, target, dose, dilution, and waiting-period records.</p>
+  <section class="note">
+    <strong>Import status: raw and unreviewed.</strong> The rows below are extracted from the PPQS PDF using position-based table reconstruction. They are not shown as farmer-facing recommendations until each candidate is checked against the cited PDF page and promoted to a normalized record.
+  </section>
+  <section>
+    <h2>Source</h2>
+    <p><a href={source.url}>{source.title}</a> · {source.publisher} · {source.year}</p>
+    <p>{source.detail}</p>
+    <p><strong>{records.length}</strong> raw candidates across <strong>{formulations.length}</strong> formulations and <strong>{byPage}</strong> PDF pages. Some PPQS cells wrap across baselines, so review must compare each candidate with its cited page before publication.</p>
+  </section>
+  <section>
+    <h2>Staging Database</h2>
+    <p>The import creates separate candidate catalogs and links them through use records. These are source-specific records, not yet the public pesticide, crop, or target database.</p>
+    <p><strong>{catalog.formulations.length}</strong> formulations · <strong>{catalog.crops.length}</strong> crops · <strong>{catalog.targets.length}</strong> targets · <strong>{catalog.uses.length}</strong> crop-target-formulation use links</p>
+    <p class="muted">During review, a formulation may be mapped to ingredients and products; crop and target names may be merged with the normalized crop and organism catalogs; every use link retains its PPQS source record.</p>
+  </section>
+  <section>
+    <h2>Promotion Path</h2>
+    <ol class="workflow"><li>Open a formulation below and compare every candidate with its PDF page.</li><li>Correct wrapped crop, target, formulation-dose, dilution, and waiting-period values in a reviewed record.</li><li>Normalize reviewed names into ingredients, formulations, crops, and organisms.</li><li>Promote reviewed rows to `uses/` as formulation-level recommendations.</li><li>Add exact product-label records separately before claiming brand-level authorization.</li></ol>
+  </section>
+  <section>
+    <h2>Formulation Review Queue</h2>
+    <p class="muted">All extracted candidates, grouped by formulation. Values are evidence to review, not spray instructions.</p>
+    {formulations.map(([formulation, candidates]) => <details class="formulation-review">
+      <summary><strong>{formulation}</strong> <span class="muted">{candidates.length} candidate{candidates.length === 1 ? "" : "s"}</span></summary>
+      <table><thead><tr><th>Crop</th><th>Target</th><th>a.i. dose</th><th>Formulation dose</th><th>Dilution / water</th><th>Waiting period</th><th>PDF page</th></tr></thead><tbody>
+        {candidates.map((record) => <tr>
+          <td>{record.cropRaw}</td>
+          <td>{record.pestRaw}</td>
+          <td>{record.activeIngredientDoseRaw}</td>
+          <td>{record.doseRaw}</td>
+          <td>{record.waterRaw}</td>
+          <td>{record.phiRaw}</td>
+          <td>{record.pdfPage}<br /><span class="badge unverified">{record.reviewStatus}</span></td>
+        </tr>)}
+      </tbody></table>
+    </details>)}
+  </section>
+</BaseLayout>
+
+<style>
+  .formulation-review { margin: 1rem 0; }
+  .formulation-review summary { cursor: pointer; padding: .75rem; background: var(--surface, #f4f4f0); }
+  .formulation-review table { margin-top: 0; }
+</style>

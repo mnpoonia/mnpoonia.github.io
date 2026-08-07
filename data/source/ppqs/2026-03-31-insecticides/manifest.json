@@ -5,10 +5,11 @@
   "sha256": "20fcd282d572e953815b56e8a2b83027da667ec844cf7bdfabb043daec315838",
   "extracted_text_file": "source.txt",
   "raw_records_file": "records.ndjson",
+  "catalog_file": "catalog.json",
   "pdf_pages": 109,
-  "records": 193,
+  "records": 5,
   "extraction": {
-    "command": "pdfjs-dist text-position extraction",
-    "policy": "Only complete single-baseline cells assigned from fixed PDF table columns are emitted. Wrapped table rows are not merged; all records are low confidence pending visual review."
+    "command": "pdfjs-dist text-position and vector-grid extraction",
+    "policy": "Pilot import uses page 2 vector cell borders for Abamectin 01.90% EC and Acequinocyl 15% w/v SC. Records remain unreviewed and must not be used for dose or crop-target recommendations until visually reviewed and normalized."
   }
 }

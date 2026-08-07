@@ -1,4 +1,5 @@
 import { compatibility, cropOrganismOccurrences, crops, geographies, imageAssets, ingredients, labelUses, organisms, organismStages, products, recommendationRules, referenceUses, scoutingProtocols, seasonality, sources, thresholds } from "../src/data/crop-protection";
+import { readPpqsImportRecords } from "../src/data/crop-protection/ppqs-import";
 
 function assertUnique(values: { id: string }[], label: string) {
   const ids = new Set<string>();
@@ -24,6 +25,7 @@ assertUnique(thresholds, "threshold");
 assertUnique(labelUses, "label use");
 assertUnique(compatibility, "compatibility record");
 assertUnique(recommendationRules, "recommendation rule");
+assertUnique(readPpqsImportRecords(), "PPQS import record");
 
 const ingredientIds = new Set(ingredients.map((item) => item.id));
 const sourceIds = new Set(sources.map((item) => item.id));

@@ -11,5 +11,9 @@
   { "id": "cotton-jassid", "name": "Jassid", "aliases": [], "type": "insect pest" },
   { "id": "cotton-aphid", "name": "Aphid", "aliases": [], "type": "insect pest" },
   { "id": "cotton-leafminer", "name": "Leafminer", "aliases": [], "type": "insect pest" },
-  { "id": "cotton-bollworm", "name": "Bollworm complex", "aliases": [], "type": "insect pest" }
+  { "id": "cotton-bollworm", "name": "Bollworm complex", "aliases": [], "type": "insect pest" },
+  { "id": "red-spider-mite", "name": "Red spider mite", "scientificName": "Tetranychus urticae", "aliases": ["Red spider mites", "Two spotted mites"], "type": "mite" },
+  { "id": "grape-mites", "name": "Mites", "aliases": [], "type": "mite" },
+  { "id": "apple-red-spider-mite", "name": "European red mite and spotted red spider mite", "aliases": [], "type": "mite" },
+  { "id": "tomato-red-spider-mite-leafminer", "name": "Red spider mites and leaf miner", "aliases": [], "type": "insect pest" }
 ]

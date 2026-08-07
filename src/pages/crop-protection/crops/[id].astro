@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import CropProtectionNav from "../../../components/CropProtectionNav.astro";
-import { cropOrganismOccurrences, crops, organisms, seasonality, sourceFor } from "../../../data/crop-protection";
+import { cropOrganismOccurrences, crops, organisms, referenceUses, seasonality, sourceFor } from "../../../data/crop-protection";
 
 export function getStaticPaths() {
   return crops.map((crop) => ({ params: { id: crop.id }, props: { crop } }));
@@ -13,13 +13,14 @@ const occurrences = cropOrganismOccurrences.filter((occurrence) => occurrence.cr
   organism: organisms.find((organism) => organism.id === occurrence.organismId),
   seasonality: seasonality.filter((record) => record.cropId === crop.id && record.organismId === occurrence.organismId),
 }));
+const uses = referenceUses.filter((use) => use.cropId === crop.id);
 ---
 <BaseLayout title={`${crop.name} | Crop Protection Reference`} description={`Monitoring and organism reference for ${crop.name}.`}>
   <CropProtectionNav />
   <p class="eyebrow">Generated crop reference</p>
   <h1>{crop.name}</h1>
   {crop.scientificName && <p class="lede"><em>{crop.scientificName}</em></p>}
-  <p>This page is generated from crop, organism, occurrence, and seasonality records. A listed organism is a monitoring target, not an automatic pesticide recommendation.</p>
+  <p>Use the linked targets to identify what is affecting the crop, then review the formulation-specific registered-use information below. A dose belongs to a crop, target, and formulation; it is not a universal ingredient rate.</p>
   <section>
     <h2>Linked Organisms</h2>
     <div class="grid">
@@ -32,4 +33,17 @@ const occurrences = cropOrganismOccurrences.filter((occurrence) => occurrence.cr
       </article>)}
     </div>
   </section>
+  {uses.length > 0 && <section>
+    <h2>Formulation Uses</h2>
+    <p class="muted">PPQS formulation-level entries. Confirm the current product label, crop stage, and local restrictions before use.</p>
+    <table><thead><tr><th>Target</th><th>Formulation</th><th>Dose</th><th>Water / dilution</th><th>Notes</th></tr></thead><tbody>
+      {uses.map((use) => <tr>
+        <td>{use.target}</td>
+        <td>{use.formulation}</td>
+        <td>{use.dose}</td>
+        <td>{use.waterVolume}</td>
+        <td>{use.timing}</td>
+      </tr>)}
+    </tbody></table>
+  </section>}
 </BaseLayout>
