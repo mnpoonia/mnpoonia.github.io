@@ -1,0 +1,33 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import { cropOrganismOccurrences, crops, organisms, referenceUses } from "../../../data/crop-protection";
+
+const cropSummaries = crops.map((crop) => {
+  const occurrences = cropOrganismOccurrences.filter((occurrence) => occurrence.cropId === crop.id);
+  const uses = referenceUses.filter((use) => use.cropId === crop.id);
+  return {
+    crop,
+    targetCount: occurrences.length,
+    useCount: uses.length,
+    targets: occurrences.slice(0, 3).map((occurrence) => organisms.find((organism) => organism.id === occurrence.organismId)?.name).filter(Boolean),
+  };
+});
+---
+<BaseLayout title="Browse Crops | Crop Protection Reference" description="Choose a crop, inspect linked targets, and compare source-backed formulation uses.">
+  <CropProtectionNav />
+  <header class="page-intro">
+    <p class="eyebrow">Crop-first reference</p>
+    <h1>Choose the crop in front of you.</h1>
+    <p class="lede">Each crop page brings together linked pests and diseases, plus formulation uses that have been reviewed into this reference. A listed use is not a diagnosis or an automatic spray decision.</p>
+  </header>
+  <section class="crop-directory" aria-label="Crop directory">
+    {cropSummaries.map(({ crop, targetCount, useCount, targets }) => <a class="crop-directory-card" href={`/crop-protection/crops/${crop.id}/`}>
+      <p class="eyebrow">{useCount > 0 ? `${useCount} formulation use${useCount === 1 ? "" : "s"}` : "Monitoring reference"}</p>
+      <h2>{crop.name}</h2>
+      {crop.scientificName && <p><em>{crop.scientificName}</em></p>}
+      <p>{targetCount} linked target{targetCount === 1 ? "" : "s"}{targets.length > 0 && `: ${targets.join(", ")}${targetCount > targets.length ? "..." : ""}`}</p>
+      <span>Open crop reference</span>
+    </a>)}
+  </section>
+</BaseLayout>

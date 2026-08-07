@@ -1,0 +1,20 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+---
+<BaseLayout title="How to Use This Reference | Crop Protection Reference" description="A safe, crop-first path for exploring targets and formulation uses.">
+  <CropProtectionNav />
+  <header class="page-intro">
+    <p class="eyebrow">How to use the reference</p>
+    <h1>Explore in the order that reduces guesswork.</h1>
+    <p class="lede">This site is a traceable reference. It can connect a crop, a target, and a formulation-level use, but it cannot diagnose a field, replace a current product label, or authorize a tank mix.</p>
+  </header>
+  <section class="flow-map">
+    <article><span>1</span><h2>Start with crop</h2><p>Choose what you are growing. Crop pages list linked targets and indicate which ones have reviewed formulation-use information.</p><a href="/crop-protection/crops/">Browse crops</a></article>
+    <article><span>2</span><h2>Confirm target</h2><p>Open the target guide. Compare symptoms, pest stage, crop part, and scouting context. A target name is not a diagnosis by itself.</p><a href="/crop-protection/organisms/asian-citrus-psyllid/">See an example guide</a></article>
+    <article><span>3</span><h2>Read formulation use</h2><p>Return to the crop-target section to compare the recorded formulation dose, water/dilution, waiting period, and source category.</p><a href="/crop-protection/crops/kinnow/">See Kinnow uses</a></article>
+    <article><span>4</span><h2>Check exact product</h2><p>A PPQS formulation entry does not establish that a specific brand is authorized. Search the product, then check its current container label.</p><a href="/crop-protection/products/">Find a product</a></article>
+    <article><span>5</span><h2>Record follow-up</h2><p>After an application, record the exact product, dose, water volume, date, coverage, rain, crop stage, and population trend before deciding what happens next.</p><a href="/crop-protection/assistant/">Kinnow psylla follow-up example</a></article>
+  </section>
+  <section class="note"><strong>Do not skip steps:</strong> a dose in this reference is tied to a particular crop, target, and formulation. It must not be transferred to another formulation, product, crop, or mixture.</section>
+</BaseLayout>

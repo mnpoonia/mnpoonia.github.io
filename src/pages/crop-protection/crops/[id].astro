@@ -14,6 +14,11 @@ const occurrences = cropOrganismOccurrences.filter((occurrence) => occurrence.cr
   seasonality: seasonality.filter((record) => record.cropId === crop.id && record.organismId === occurrence.organismId),
 }));
 const uses = referenceUses.filter((use) => use.cropId === crop.id);
+const targetSections = occurrences.map((occurrence) => ({
+  ...occurrence,
+  uses: uses.filter((use) => use.organismId === occurrence.organismId),
+}));
+const unmatchedUses = uses.filter((use) => !occurrences.some((occurrence) => occurrence.organismId === use.organismId));
 ---
 <BaseLayout title={`${crop.name} | Crop Protection Reference`} description={`Monitoring and organism reference for ${crop.name}.`}>
   <CropProtectionNav />
@@ -24,29 +29,27 @@ const uses = referenceUses.filter((use) => use.cropId === crop.id);
     <strong>PPQS source mapping:</strong> the PPQS major-use table lists this crop category as <strong>Citrus</strong>, not Kinnow. Citrus-sourced entries below are shown for Kinnow as a transparent crop-category mapping and remain conditional until supported by the current product label.
   </section>}
   <p>Use the linked targets to identify what is affecting the crop, then review the formulation-specific registered-use information below. A dose belongs to a crop, target, and formulation; it is not a universal ingredient rate.</p>
-  <section>
-    <h2>Linked Organisms</h2>
-    <div class="grid">
-      {occurrences.map((occurrence) => occurrence.organism && <article class="card">
-        <p class="eyebrow">{occurrence.organism.type}</p>
-        <h3><a href={`/crop-protection/organisms/${occurrence.organism.id}/`}>{occurrence.organism.name}</a></h3>
-        {occurrence.organism.scientificName && <p><em>{occurrence.organism.scientificName}</em></p>}
-        <p>{occurrence.monitoringNote}</p>
-        {occurrence.seasonality.map((record) => <p class="muted">Monitoring priority: {record.monitoringPriority} · Months: {record.months.join(", ")} · Evidence: {record.sourceIds.map((id) => <a href={sourceFor(id).url}>{sourceFor(id).publisher}</a>)}</p>)}
-      </article>)}
-    </div>
+  <section class="target-directory">
+    <p class="eyebrow">Targets and formulation uses</p>
+    <h2>Find the target before comparing a dose.</h2>
+    <p class="muted">The use information below is organized by target. It is formulation-level evidence, not a product-label authorization or an automatic treatment decision.</p>
+    {targetSections.map((occurrence) => occurrence.organism && <article class="target-card">
+      <div class="target-heading">
+        <div><p class="eyebrow">{occurrence.organism.type}</p><h3><a href={`/crop-protection/organisms/${occurrence.organism.id}/`}>{occurrence.organism.name}</a></h3>{occurrence.organism.scientificName && <p><em>{occurrence.organism.scientificName}</em></p>}</div>
+        <span class={occurrence.uses.length > 0 ? "badge conditional" : "badge unverified"}>{occurrence.uses.length > 0 ? `${occurrence.uses.length} use${occurrence.uses.length === 1 ? "" : "s"}` : "monitor"}</span>
+      </div>
+      <p>{occurrence.monitoringNote}</p>
+      {occurrence.seasonality.map((record) => <p class="muted">Monitoring priority: {record.monitoringPriority} · Months: {record.months.join(", ")} · Evidence: {record.sourceIds.map((id) => <a href={sourceFor(id).url}>{sourceFor(id).publisher}</a>)}</p>)}
+      <p class="target-action"><a href={`/crop-protection/organisms/${occurrence.organism.id}/`}>Review identification and crop context</a></p>
+      {occurrence.uses.length > 0 ? <div class="use-list">
+        {occurrence.uses.map((use) => <article class="use-card">
+          <div><p class="eyebrow">Formulation</p><h4>{use.formulation}</h4>{use.sourceCrop && <p class="muted">PPQS crop category: {use.sourceCrop}</p>}</div>
+          <dl><div><dt>Dose</dt><dd>{use.dose}</dd></div><div><dt>Water / dilution</dt><dd>{use.waterVolume}</dd></div></dl>
+          <p class="use-note">{use.timing}</p>
+          <p class="use-action"><a href="/crop-protection/products/">Check an exact product label before use</a> · <a href="/crop-protection/sources/">Read source boundary</a></p>
+        </article>)}
+      </div> : <p class="no-use">No formulation use is currently reviewed for this target. Continue identification and monitoring; absence here is not evidence that no option exists.</p>}
+    </article>)}
+    {unmatchedUses.map((use) => <article class="use-card"><h3>{use.target}</h3><p>{use.formulation} · {use.dose} · {use.waterVolume}</p></article>)}
   </section>
-  {uses.length > 0 && <section>
-    <h2>Formulation Uses</h2>
-    <p class="muted">PPQS formulation-level entries. Confirm the current product label, crop stage, and local restrictions before use.</p>
-    <table><thead><tr><th>Target</th><th>Formulation</th><th>Dose</th><th>Water / dilution</th><th>Notes</th></tr></thead><tbody>
-      {uses.map((use) => <tr>
-        <td>{use.target}</td>
-        <td>{use.formulation}{use.sourceCrop && <><br /><span class="muted">PPQS crop category: {use.sourceCrop}</span></>}</td>
-        <td>{use.dose}</td>
-        <td>{use.waterVolume}</td>
-        <td>{use.timing}</td>
-      </tr>)}
-    </tbody></table>
-  </section>}
 </BaseLayout>
