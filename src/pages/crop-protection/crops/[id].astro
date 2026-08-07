@@ -20,6 +20,9 @@ const uses = referenceUses.filter((use) => use.cropId === crop.id);
   <p class="eyebrow">Generated crop reference</p>
   <h1>{crop.name}</h1>
   {crop.scientificName && <p class="lede"><em>{crop.scientificName}</em></p>}
+  {crop.id === "kinnow" && <section class="note">
+    <strong>PPQS source mapping:</strong> the PPQS major-use table lists this crop category as <strong>Citrus</strong>, not Kinnow. Citrus-sourced entries below are shown for Kinnow as a transparent crop-category mapping and remain conditional until supported by the current product label.
+  </section>}
   <p>Use the linked targets to identify what is affecting the crop, then review the formulation-specific registered-use information below. A dose belongs to a crop, target, and formulation; it is not a universal ingredient rate.</p>
   <section>
     <h2>Linked Organisms</h2>
@@ -39,7 +42,7 @@ const uses = referenceUses.filter((use) => use.cropId === crop.id);
     <table><thead><tr><th>Target</th><th>Formulation</th><th>Dose</th><th>Water / dilution</th><th>Notes</th></tr></thead><tbody>
       {uses.map((use) => <tr>
         <td>{use.target}</td>
-        <td>{use.formulation}</td>
+        <td>{use.formulation}{use.sourceCrop && <><br /><span class="muted">PPQS crop category: {use.sourceCrop}</span></>}</td>
         <td>{use.dose}</td>
         <td>{use.waterVolume}</td>
         <td>{use.timing}</td>

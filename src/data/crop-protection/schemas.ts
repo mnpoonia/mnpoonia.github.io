@@ -206,6 +206,7 @@ export const referenceUseSchema = z.object({
   organismId: z.string().regex(/^[a-z0-9-]+$/),
   target: z.string().min(1),
   formulation: z.string().min(1),
+  sourceCrop: z.string().min(1).optional(),
   dose: z.string().min(1),
   waterVolume: z.string().min(1),
   acreEquivalent: z.object({

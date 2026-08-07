@@ -6,6 +6,7 @@
     "organismId": "asian-citrus-psyllid",
     "target": "Citrus leafminer and psylla",
     "formulation": "Imidacloprid 17.8% SL",
+    "sourceCrop": "Citrus",
     "dose": "50 ml per hectare",
     "waterVolume": "Depending on tree size and protection equipment used",
     "timing": "PPQS formulation-level entry; waiting period: 15 days.",
@@ -32,6 +33,7 @@
     "organismId": "asian-citrus-psyllid",
     "target": "Citrus psylla",
     "formulation": "Thiamethoxam 25% WG",
+    "sourceCrop": "Citrus",
     "dose": "100 g per hectare",
     "waterVolume": "1,000 litres per hectare",
     "acreEquivalent": {
