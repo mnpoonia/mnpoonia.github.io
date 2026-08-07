@@ -5,11 +5,13 @@
   "sha256": "20fcd282d572e953815b56e8a2b83027da667ec844cf7bdfabb043daec315838",
   "extracted_text_file": "source.txt",
   "raw_records_file": "records.ndjson",
+  "review_file": "review.ndjson",
   "catalog_file": "catalog.json",
   "pdf_pages": 109,
   "records": 5,
+  "review_candidates": 360,
   "extraction": {
     "command": "pdfjs-dist text-position and vector-grid extraction",
-    "policy": "Pilot import uses page 2 vector cell borders for Abamectin 01.90% EC and Acequinocyl 15% w/v SC. Records remain unreviewed and must not be used for dose or crop-target recommendations until visually reviewed and normalized."
+    "policy": "Six-column agricultural table candidates are collected across the document and excluded when they are premises, construction, timber, storage, or fumigation uses. Only the two reviewed pilot formulations are emitted to records.ndjson; all other candidates are held in review.ndjson until formulation review and promotion."
   }
 }

@@ -7,6 +7,7 @@ const records = readFileSync("data/source/ppqs/2026-03-31-insecticides/records.n
   .split("\n")
   .map((line) => JSON.parse(line));
 const catalog = JSON.parse(readFileSync("data/source/ppqs/2026-03-31-insecticides/catalog.json", "utf8"));
+const review = readFileSync("data/source/ppqs/2026-03-31-insecticides/review.ndjson", "utf8").trim().split("\n").filter(Boolean).map((line) => JSON.parse(line));
 
 test("PPQS page 2 grid pilot produces two formulations and five crop-target rows", () => {
   assert.equal(records.length, 5);
@@ -25,4 +26,10 @@ test("PPQS pilot creates separate catalogs linked by formulation-crop-target use
   assert.equal(catalog.targets.length, 5);
   assert.equal(catalog.uses.length, 5);
   assert.ok(catalog.uses.every((use: { formulationId: string; cropId: string; targetId: string }) => use.formulationId && use.cropId && use.targetId));
+});
+
+test("PPQS review queue excludes non-agricultural and rodent-control contexts", () => {
+  assert.ok(review.length > 100);
+  assert.equal(review.filter((record) => /bromadiolone|brodifacoum|zinc phosphide/i.test(record.formulation_heading_raw)).length, 0);
+  assert.equal(review.filter((record) => /residential premises|building|wood|plywood|veneer|godown|stored grain|fumigation/i.test(`${record.crop_raw} ${record.pest_raw}`)).length, 0);
 });

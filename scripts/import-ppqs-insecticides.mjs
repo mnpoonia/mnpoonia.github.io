@@ -14,10 +14,12 @@ const OUTPUT_DIR = resolve(ROOT, "data/source/ppqs/2026-03-31-insecticides");
 const PDF_PATH = resolve(OUTPUT_DIR, "source.pdf");
 const TEXT_PATH = resolve(OUTPUT_DIR, "source.txt");
 const RECORDS_PATH = resolve(OUTPUT_DIR, "records.ndjson");
+const REVIEW_PATH = resolve(OUTPUT_DIR, "review.ndjson");
 const CATALOG_PATH = resolve(OUTPUT_DIR, "catalog.json");
 const MANIFEST_PATH = resolve(OUTPUT_DIR, "manifest.json");
 const PILOT_FORMULATIONS = new Set(["Abamectin 01.90 % EC", "Acequinocyl 15% w/v SC"]);
 const FORMULATION = /(?:%|g\/l|g\/kg|w\/w|w\/v)\s*(?:EC|SC|SL|WG|WP|GR|OD|CS|FS|SP|EW|DP|SG)\b/i;
+const EXCLUDED_CONTEXT = /\b(public health|residential premises|building|construction|wood|plywood|veneer|godown|stored grain|commodity|aeration|fumigation|pre and post construction)\b/i;
 
 function normalize(text) {
   return text.replace(/\u00a0/g, " ").replace(/\s+/g, " ").trim();
@@ -118,6 +120,77 @@ function matchesRect(rect, left, right) {
   return Math.abs(rect.left - left) < 2 && Math.abs(rect.right - right) < 2;
 }
 
+function boundaryGroups(rects) {
+  const values = [];
+  for (const rect of rects) values.push(rect.left, rect.right);
+  return [...values.sort((left, right) => left - right).reduce((groups, value) => {
+    const group = groups.at(-1);
+    if (!group || value - group.at(-1) > 2) groups.push([value]);
+    else group.push(value);
+    return groups;
+  }, [])].map((group) => group.reduce((sum, value) => sum + value, 0) / group.length);
+}
+
+function compatibleSixColumnBounds(rects) {
+  const bounds = boundaryGroups(rects.filter((rect) => rect.right - rect.left > 45));
+  const candidates = [];
+  for (let index = 0; index + 6 < bounds.length; index += 1) {
+    const slice = bounds.slice(index, index + 7);
+    if (slice[0] > 45 || slice.at(-1) < 560 || slice.some((value, offset) => offset > 0 && value - slice[offset - 1] < 40)) continue;
+    candidates.push(slice);
+  }
+  return candidates;
+}
+
+function cellFor(rects, left, right, top, bottom) {
+  return rects.find((rect) => matchesRect(rect, left, right) && Math.abs(rect.top - top) < 2 && Math.abs(rect.bottom - bottom) < 2);
+}
+
+async function agriculturalCandidateRows() {
+  const document = await getDocument({ data: new Uint8Array(readFileSync(PDF_PATH)) }).promise;
+  const records = new Map();
+  const review = new Map();
+  let formulation = null;
+
+  for (let pageNumber = 2; pageNumber <= 84; pageNumber += 1) {
+    const page = await document.getPage(pageNumber);
+    const content = await page.getTextContent();
+    const items = content.items.filter((item) => "str" in item && item.str.trim()).map((item) => ({ x: item.transform[4], y: item.transform[5], text: item.str }));
+    const rects = pageRects(await page.getOperatorList());
+    const tableBounds = compatibleSixColumnBounds(rects);
+    for (const bounds of tableBounds) {
+      const [cropLeft, pestLeft, activeLeft, formulationLeft, waterLeft, phiLeft, tableRight] = bounds;
+      const headings = rects
+        .filter((rect) => matchesRect(rect, cropLeft, tableRight))
+        .map((rect) => ({ ...rect, text: textInRect(items, rect) }))
+        .filter((rect) => FORMULATION.test(rect.text));
+      if (headings.length === 0) continue;
+
+      const cropCells = rects.filter((rect) => matchesRect(rect, cropLeft, pestLeft));
+      const targetCells = rects.filter((rect) => matchesRect(rect, pestLeft, activeLeft));
+      for (const [headingIndex, heading] of headings.entries()) {
+        const nextHeading = headings[headingIndex + 1];
+        formulation = heading.text;
+        for (const targetCell of targetCells.filter((cell) => cell.top < heading.bottom && (!nextHeading || cell.bottom > nextHeading.top))) {
+          const cropCell = cropCells.find((cell) => cell.top >= targetCell.top - 1 && cell.bottom <= targetCell.bottom + 1);
+          const crop = cropCell && textInRect(items, cropCell);
+          const pest = textInRect(items, targetCell);
+          const values = [[activeLeft, formulationLeft], [formulationLeft, waterLeft], [waterLeft, phiLeft], [phiLeft, tableRight]].map(([left, right]) => {
+            const cell = cellFor(rects, left, right, targetCell.top, targetCell.bottom);
+            return cell ? textInRect(items, cell) : "";
+          });
+          if (!crop || !pest || values.some((value) => !value) || values.slice(1).every((value) => value === "-") || EXCLUDED_CONTEXT.test(`${crop} ${pest}`)) continue;
+          const record = { pdf_page: pageNumber, formulation_heading_raw: formulation, crop_raw: crop, pest_raw: pest, active_ingredient_dose_raw: values[0], dose_raw: values[1], water_raw: values[2], phi_raw: values[3] };
+          const key = JSON.stringify(record);
+          if (PILOT_FORMULATIONS.has(formulation)) records.set(key, record);
+          else review.set(key, { ...record, reason: "agricultural-six-column-candidate-awaiting-formulation-review" });
+        }
+      }
+    }
+  }
+  return { records: [...records.values()], review: [...review.values()] };
+}
+
 async function pilotRecords() {
   const document = await getDocument({ data: new Uint8Array(readFileSync(PDF_PATH)) }).promise;
   const page = await document.getPage(2);
@@ -178,15 +251,27 @@ async function main() {
   const pages = await extractPages();
   writeFileSync(TEXT_PATH, `${pages.map((page, index) => `--- PDF page ${index + 1} ---\n${page.text}`).join("\n\n")}\n`);
 
-  const records = (await pilotRecords()).map((record, index) => ({ id: `ppqs-insecticide-${String(index + 1).padStart(5, "0")}`, pdf_page: 2, ...record }));
+  const agricultural = await agriculturalCandidateRows();
+  const pilot = await pilotRecords();
+  const extractedPilot = agricultural.records.filter((record) => PILOT_FORMULATIONS.has(record.formulation_heading_raw));
+  const records = (extractedPilot.length === 5 ? extractedPilot : pilot).map((record, index) => ({
+    id: `ppqs-insecticide-${String(index + 1).padStart(5, "0")}`,
+    pdf_page: record.pdf_page ?? 2,
+    source: { publisher: "Plant Protection Quarantine and Storage, Government of India", title: "Major Uses of Pesticides", url: SOURCE_URL, published_through: SOURCE_DATE },
+    row_raw: record.row_raw ?? `${record.crop_raw} ${record.pest_raw} ${record.active_ingredient_dose_raw} ${record.dose_raw} ${record.water_raw} ${record.phi_raw}`,
+    confidence: "medium",
+    flags: ["vector-grid-extraction", "pilot", "unreviewed-raw-extraction", "not-for-dose-or-target-use"],
+    ...record,
+  }));
 
   if (records.length === 0) throw new Error("No usable records were extracted; inspect source.txt before changing parsing rules.");
   writeFileSync(RECORDS_PATH, `${records.map((record) => JSON.stringify(record)).join("\n")}\n`);
+  writeFileSync(REVIEW_PATH, `${agricultural.review.map((record) => JSON.stringify(record)).join("\n")}\n`);
   writeFileSync(CATALOG_PATH, `${JSON.stringify(buildCatalog(records), null, 2)}\n`);
   writeFileSync(MANIFEST_PATH, `${JSON.stringify({
     source_url: SOURCE_URL, published_through: SOURCE_DATE, downloaded_file: "source.pdf", sha256: createHash("sha256").update(pdf).digest("hex"),
-    extracted_text_file: "source.txt", raw_records_file: "records.ndjson", catalog_file: "catalog.json", pdf_pages: pages.length, records: records.length,
-    extraction: { command: "pdfjs-dist text-position and vector-grid extraction", policy: "Pilot import uses page 2 vector cell borders for Abamectin 01.90% EC and Acequinocyl 15% w/v SC. Records remain unreviewed and must not be used for dose or crop-target recommendations until visually reviewed and normalized." },
+    extracted_text_file: "source.txt", raw_records_file: "records.ndjson", review_file: "review.ndjson", catalog_file: "catalog.json", pdf_pages: pages.length, records: records.length, review_candidates: agricultural.review.length,
+    extraction: { command: "pdfjs-dist text-position and vector-grid extraction", policy: "Six-column agricultural table candidates are collected across the document and excluded when they are premises, construction, timber, storage, or fumigation uses. Only the two reviewed pilot formulations are emitted to records.ndjson; all other candidates are held in review.ndjson until formulation review and promotion." },
   }, null, 2)}\n`);
   console.log(`Wrote ${records.length} unreviewed raw evidence rows to ${RECORDS_PATH}`);
 }

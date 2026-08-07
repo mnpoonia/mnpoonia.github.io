@@ -7,6 +7,7 @@ import { sourceImportRecordSchema, type SourceImportRecord } from "./schemas";
 const root = process.cwd();
 const recordsPath = resolve(root, "data/source/ppqs/2026-03-31-insecticides/records.ndjson");
 const catalogPath = resolve(root, "data/source/ppqs/2026-03-31-insecticides/catalog.json");
+const reviewPath = resolve(root, "data/source/ppqs/2026-03-31-insecticides/review.ndjson");
 
 type RawPpqsRecord = {
   id: string;
@@ -56,4 +57,9 @@ export type PpqsCatalog = {
 
 export function readPpqsCatalog(): PpqsCatalog {
   return JSON.parse(readFileSync(catalogPath, "utf8")) as PpqsCatalog;
+}
+
+export function readPpqsReviewCandidates() {
+  const raw = readFileSync(reviewPath, "utf8").trim();
+  return raw ? raw.split("\n").map((line) => JSON.parse(line) as Omit<RawPpqsRecord, "id" | "flags" | "confidence"> & { reason: string }) : [];
 }
