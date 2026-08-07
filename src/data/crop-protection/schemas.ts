@@ -1,6 +1,42 @@
 import { z } from "zod";
 
-export const evidenceStatusSchema = z.enum(["verified", "conditional", "unverified", "research-only"]);
+export const evidenceStatusSchema = z.enum(["verified", "conditional", "unverified", "research-only", "demonstration", "historical-do-not-use"]);
+export const problemTypeSchema = z.enum(["insect pest", "mite", "disease", "weed", "nutrient disorder", "physiological disorder", "abiotic injury", "beneficial organism"]);
+
+export const sourceSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  title: z.string().min(1),
+  publisher: z.string().min(1),
+  year: z.number().int(),
+  url: z.string().url(),
+  detail: z.string().min(1),
+  status: evidenceStatusSchema,
+});
+
+export const ingredientSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  category: z.enum(["insecticide", "oil-based control"]),
+  iracGroup: z.string().optional(),
+  modeOfAction: z.string().optional(),
+});
+
+export const formulationSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  components: z.array(z.object({ ingredientId: z.string().regex(/^[a-z0-9-]+$/), concentration: z.string().min(1) })).min(1),
+});
+
+export const productSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  brand: z.string().min(1),
+  manufacturer: z.string().min(1),
+  aliases: z.array(z.string()).default([]),
+  formulationId: z.string().regex(/^[a-z0-9-]+$/),
+  status: evidenceStatusSchema,
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  verifiedCropUses: z.array(z.string()).default([]),
+});
 
 export const cropSchema = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
@@ -14,7 +50,7 @@ export const organismSchema = z.object({
   name: z.string().min(1),
   scientificName: z.string().optional(),
   aliases: z.array(z.string()).default([]),
-  type: z.enum(["insect pest", "mite", "disease", "weed"]),
+  type: problemTypeSchema,
 });
 
 export const cropOrganismOccurrenceSchema = z.object({
@@ -23,6 +59,53 @@ export const cropOrganismOccurrenceSchema = z.object({
   organismId: z.string().regex(/^[a-z0-9-]+$/),
   monitoringNote: z.string().min(1),
   href: z.string().startsWith("/").optional(),
+});
+
+export const cropGuidanceSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  section: z.enum(["at-a-glance", "climate", "soil-and-drainage", "varieties", "planting", "training-and-pruning", "nutrition", "irrigation", "weed-management", "harvest", "post-harvest"]),
+  title: z.string().min(1),
+  summary: z.string().min(1),
+  value: z.string().optional(),
+  qualifiers: z.array(z.string()).default([]),
+  geographyId: z.string().regex(/^[a-z0-9-]+$/).optional(),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  evidenceStatus: evidenceStatusSchema,
+});
+
+export const cropCalendarTaskSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  months: z.array(z.number().int().min(1).max(12)).min(1),
+  title: z.string().min(1),
+  task: z.string().min(1),
+  kind: z.enum(["crop-care", "monitoring", "harvest", "protection-restriction"]),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  evidenceStatus: evidenceStatusSchema,
+});
+
+export const lookAlikeSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  name: z.string().min(1),
+  distinction: z.string().min(1),
+  action: z.string().min(1),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  evidenceStatus: evidenceStatusSchema,
+});
+
+export const managementActionSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  cropId: z.string().regex(/^[a-z0-9-]+$/),
+  organismId: z.string().regex(/^[a-z0-9-]+$/),
+  category: z.enum(["monitor", "cultural", "mechanical", "sanitation", "biological", "expert-confirmation"]),
+  title: z.string().min(1),
+  action: z.string().min(1),
+  limitations: z.string().optional(),
+  sourceIds: z.array(z.string().regex(/^[a-z0-9-]+$/)).min(1),
+  evidenceStatus: evidenceStatusSchema,
 });
 
 export const organismStageSchema = z.object({
@@ -206,6 +289,7 @@ export const referenceUseSchema = z.object({
   organismId: z.string().regex(/^[a-z0-9-]+$/),
   target: z.string().min(1),
   formulation: z.string().min(1),
+  formulationId: z.string().regex(/^[a-z0-9-]+$/).optional(),
   sourceCrop: z.string().min(1).optional(),
   dose: z.string().min(1),
   waterVolume: z.string().min(1),
@@ -220,8 +304,16 @@ export const referenceUseSchema = z.object({
 });
 
 export type CropRecord = z.infer<typeof cropSchema>;
+export type SourceRecord = z.infer<typeof sourceSchema>;
+export type IngredientRecord = z.infer<typeof ingredientSchema>;
+export type FormulationRecord = z.infer<typeof formulationSchema>;
+export type ProductRecord = z.infer<typeof productSchema>;
+export type CropGuidanceRecord = z.infer<typeof cropGuidanceSchema>;
+export type CropCalendarTaskRecord = z.infer<typeof cropCalendarTaskSchema>;
 export type OrganismRecord = z.infer<typeof organismSchema>;
 export type CropOrganismOccurrenceRecord = z.infer<typeof cropOrganismOccurrenceSchema>;
+export type LookAlikeRecord = z.infer<typeof lookAlikeSchema>;
+export type ManagementActionRecord = z.infer<typeof managementActionSchema>;
 export type OrganismStageRecord = z.infer<typeof organismStageSchema>;
 export type ImageAssetRecord = z.infer<typeof imageAssetSchema>;
 export type GeographyRecord = z.infer<typeof geographySchema>;

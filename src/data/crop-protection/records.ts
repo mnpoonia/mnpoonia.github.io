@@ -1,9 +1,19 @@
 import crops from "./crops.json";
+import sources from "./sources.json";
+import ingredients from "./ingredients.json";
+import formulations from "./formulations.json";
+import products from "./products.json";
+import kinnowGuidance from "./guidance/kinnow.json";
+import kinnowCalendarTasks from "./calendar/kinnow.json";
+import kinnowLookAlikes from "./look-alikes/kinnow.json";
+import kinnowActions from "./actions/kinnow.json";
 import ppqsPilotOccurrences from "./occurrences/ppqs-pilot.json";
 import kinnowOccurrences from "./occurrences/kinnow.json";
 import cottonOccurrences from "./occurrences/cotton.json";
 import organisms from "./organisms.json";
 import asianCitrusPsyllidStages from "./stages/asian-citrus-psyllid.json";
+import phytophthoraStages from "./stages/phytophthora-diseases.json";
+import nutrientDisorderStages from "./stages/kinnow-nutrient-disorder.json";
 import images from "./images.json";
 import geographies from "./geographies.json";
 import seasonality from "./seasonality.json";
@@ -15,16 +25,24 @@ import recommendationRules from "./recommendation-rules.json";
 import cottonUses from "./uses/cotton.json";
 import kinnowPsyllaUses from "./uses/kinnow-citrus-psylla.json";
 import ppqsPilotUses from "./uses/ppqs-pilot.json";
-import { compatibilitySchema, cropOrganismOccurrenceSchema, cropSchema, geographySchema, imageAssetSchema, labelUseSchema, organismSchema, organismStageSchema, recommendationRuleSchema, referenceUseSchema, scoutingProtocolSchema, seasonalitySchema, thresholdSchema, type CompatibilityRecord, type CropOrganismOccurrenceRecord, type CropRecord, type GeographyRecord, type ImageAssetRecord, type LabelUseRecord, type OrganismRecord, type OrganismStageRecord, type RecommendationRuleRecord, type ReferenceUseRecord, type ScoutingProtocolRecord, type SeasonalityRecord, type ThresholdRecord } from "./schemas";
+import { compatibilitySchema, cropCalendarTaskSchema, cropGuidanceSchema, cropOrganismOccurrenceSchema, cropSchema, formulationSchema, geographySchema, imageAssetSchema, ingredientSchema, labelUseSchema, lookAlikeSchema, managementActionSchema, organismSchema, organismStageSchema, productSchema, recommendationRuleSchema, referenceUseSchema, scoutingProtocolSchema, seasonalitySchema, sourceSchema, thresholdSchema, type CompatibilityRecord, type CropCalendarTaskRecord, type CropGuidanceRecord, type CropOrganismOccurrenceRecord, type CropRecord, type FormulationRecord, type GeographyRecord, type ImageAssetRecord, type IngredientRecord, type LabelUseRecord, type LookAlikeRecord, type ManagementActionRecord, type OrganismRecord, type OrganismStageRecord, type ProductRecord, type RecommendationRuleRecord, type ReferenceUseRecord, type ScoutingProtocolRecord, type SeasonalityRecord, type SourceRecord, type ThresholdRecord } from "./schemas";
 
 function parseRecords<T>(records: unknown[], schema: { parse: (record: unknown) => T }) {
   return records.map((record) => schema.parse(record));
 }
 
 export const cropRecords: CropRecord[] = parseRecords(crops, cropSchema);
+export const sourceRecords: SourceRecord[] = parseRecords(sources, sourceSchema);
+export const ingredientRecords: IngredientRecord[] = parseRecords(ingredients, ingredientSchema);
+export const formulationRecords: FormulationRecord[] = parseRecords(formulations, formulationSchema);
+export const productRecords: ProductRecord[] = parseRecords(products, productSchema);
+export const cropGuidanceRecords: CropGuidanceRecord[] = parseRecords(kinnowGuidance, cropGuidanceSchema);
+export const cropCalendarTaskRecords: CropCalendarTaskRecord[] = parseRecords(kinnowCalendarTasks, cropCalendarTaskSchema);
 export const organismRecords: OrganismRecord[] = parseRecords(organisms, organismSchema);
 export const cropOrganismOccurrenceRecords: CropOrganismOccurrenceRecord[] = parseRecords([...kinnowOccurrences, ...cottonOccurrences, ...ppqsPilotOccurrences], cropOrganismOccurrenceSchema);
-export const organismStageRecords: OrganismStageRecord[] = parseRecords(asianCitrusPsyllidStages, organismStageSchema);
+export const organismStageRecords: OrganismStageRecord[] = parseRecords([...asianCitrusPsyllidStages, ...phytophthoraStages, ...nutrientDisorderStages], organismStageSchema);
+export const lookAlikeRecords: LookAlikeRecord[] = parseRecords(kinnowLookAlikes, lookAlikeSchema);
+export const managementActionRecords: ManagementActionRecord[] = parseRecords(kinnowActions, managementActionSchema);
 export const imageAssetRecords: ImageAssetRecord[] = parseRecords(images, imageAssetSchema);
 export const geographyRecords: GeographyRecord[] = parseRecords(geographies, geographySchema);
 export const seasonalityRecords: SeasonalityRecord[] = parseRecords(seasonality, seasonalitySchema);

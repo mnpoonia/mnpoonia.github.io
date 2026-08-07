@@ -1,0 +1,8 @@
+[
+  { "id": "thiamethoxam-25-wg", "name": "Thiamethoxam 25% WG", "components": [{ "ingredientId": "thiamethoxam", "concentration": "25%" }] },
+  { "id": "imidacloprid-17-8-sl", "name": "Imidacloprid 17.8% SL", "components": [{ "ingredientId": "imidacloprid", "concentration": "17.8%" }] },
+  { "id": "profenofos-40-cypermethrin-4-ec", "name": "Profenofos 40% + Cypermethrin 4% EC", "components": [{ "ingredientId": "profenofos", "concentration": "40%" }, { "ingredientId": "cypermethrin", "concentration": "4%" }] },
+  { "id": "horticultural-mineral-oil", "name": "Horticultural mineral oil", "components": [{ "ingredientId": "horticultural-mineral-oil", "concentration": "Not recorded" }] },
+  { "id": "abamectin-1-9-ec", "name": "Abamectin 1.90% EC", "components": [{ "ingredientId": "abamectin", "concentration": "1.90%" }] },
+  { "id": "acequinocyl-15-sc", "name": "Acequinocyl 15% w/v SC", "components": [{ "ingredientId": "acequinocyl", "concentration": "15% w/v" }] }
+]

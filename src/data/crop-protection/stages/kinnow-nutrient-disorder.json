@@ -1,0 +1,16 @@
+[
+  {
+    "id": "kinnow-leaf-yellowing-observation",
+    "organismId": "kinnow-nutrient-disorder",
+    "name": "Leaf yellowing observation",
+    "kind": "symptom-stage",
+    "order": 1,
+    "whereToLook": "New and old leaves across more than one representative tree, plus the root zone and irrigation conditions.",
+    "visibility": "Record whether yellowing is between veins or uniform, which leaf age is affected first, and whether the pattern occurs across the orchard.",
+    "seasonality": "A locally reviewed deficiency calendar is not yet available.",
+    "identificationNotes": "Leaf colour alone cannot distinguish zinc, iron, root stress, disease, salinity, or other causes.",
+    "immediateAction": "Record the pattern and seek appropriate soil or leaf-test guidance before applying a nutrient product.",
+    "managementEvidence": "Demonstration disorder guide: no nutrient dose is published without confirmation and source-backed crop context.",
+    "sourceIds": ["site-editorial-2026"]
+  }
+]

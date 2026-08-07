@@ -34,7 +34,8 @@ export function assessKinnowPsylla(input: AssessmentInput) {
       if (candidateGroups.some((group) => groups.includes(group))) {
         return { product, status: "not-preferred", reason: `It repeats recent IRAC group ${candidateGroups.filter((group) => groups.includes(group)).join(", ")} exposure.` };
       }
-      if (input.flowering || input.waterStress) {
+      const isOil = product.formulationId === "horticultural-mineral-oil";
+      if (isOil && (input.flowering || input.waterStress)) {
         return { product, status: "conditional", reason: "Oil-based options require crop-condition and label checks; PAU warns against oil sprays during flowering and water stress." };
       }
       return { product, status: "conditional", reason: "A PAU option, but no fixed retreatment interval was verified. Confirm the current label, crop condition, and application history." };

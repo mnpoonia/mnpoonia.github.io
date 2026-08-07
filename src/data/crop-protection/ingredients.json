@@ -1,0 +1,9 @@
+[
+  { "id": "thiamethoxam", "name": "Thiamethoxam", "category": "insecticide", "iracGroup": "4A", "modeOfAction": "Nicotinic acetylcholine receptor competitive modulator" },
+  { "id": "imidacloprid", "name": "Imidacloprid", "category": "insecticide", "iracGroup": "4A", "modeOfAction": "Nicotinic acetylcholine receptor competitive modulator" },
+  { "id": "profenofos", "name": "Profenofos", "category": "insecticide", "iracGroup": "1B", "modeOfAction": "Acetylcholinesterase inhibitor" },
+  { "id": "cypermethrin", "name": "Cypermethrin", "category": "insecticide", "iracGroup": "3A", "modeOfAction": "Sodium-channel modulator" },
+  { "id": "abamectin", "name": "Abamectin", "category": "insecticide" },
+  { "id": "acequinocyl", "name": "Acequinocyl", "category": "insecticide" },
+  { "id": "horticultural-mineral-oil", "name": "Horticultural mineral oil", "category": "oil-based control" }
+]

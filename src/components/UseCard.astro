@@ -1,0 +1,18 @@
+---
+import EvidenceStatus from "./EvidenceStatus.astro";
+import SourceLinks from "./SourceLinks.astro";
+import type { ReferenceUse } from "../data/crop-protection";
+
+interface Props { use: ReferenceUse; conflict?: boolean; }
+const { use, conflict = false } = Astro.props;
+---
+<article class="use-card">
+  <div><p class="eyebrow">Formulation reference</p><h3>{use.formulation}</h3><EvidenceStatus status={use.status} />{use.sourceCrop && <p class="muted">Source crop category: {use.sourceCrop}</p>}</div>
+  <dl><div><dt>Dose</dt><dd>{use.dose}</dd></div><div><dt>Water / dilution</dt><dd>{use.waterVolume}</dd></div></dl>
+  {conflict && <p class="conflict-notice"><strong>Conflicting reference:</strong> another source records a materially different rate for this crop-target-formulation combination. Do not choose between them here; verify the exact current product label.</p>}
+  {use.timing && <p class="use-note"><strong>Timing:</strong> {use.timing}</p>}
+  {use.conditions && <p class="use-condition"><strong>Restrictions and conditions:</strong> {use.conditions}</p>}
+  {use.acreEquivalent && <p class="muted use-derived">Derived equivalent: {use.acreEquivalent.dose}; {use.acreEquivalent.waterVolume}. Check the original source value first.</p>}
+  <SourceLinks sourceIds={use.sourceIds} />
+  <p class="use-action"><a href="/crop-protection/products/">Check an exact product label before use</a></p>
+</article>

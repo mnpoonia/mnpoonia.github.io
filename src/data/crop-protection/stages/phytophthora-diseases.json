@@ -1,0 +1,16 @@
+[
+  {
+    "id": "phytophthora-collar-observation",
+    "organismId": "phytophthora-diseases",
+    "name": "Collar and trunk-base observation",
+    "kind": "symptom-stage",
+    "order": 1,
+    "whereToLook": "Root collar, trunk base, basin, and canopy.",
+    "visibility": "Record bark condition, gum or moisture, position relative to soil, standing water, and canopy decline. Do not treat any one sign as confirmation.",
+    "seasonality": "Record recent irrigation, rainfall, drainage, and injury conditions; a reviewed seasonal risk calendar is not yet available.",
+    "identificationNotes": "Gummosis, foot rot, and collar rot are farmer terms that need a cause-specific diagnosis before a treatment choice.",
+    "immediateAction": "Improve observation quality and avoid scraping or painting affected bark until the cause is reasonably confirmed.",
+    "managementEvidence": "Demonstration disease guide: nonchemical drainage and collar-protection context is present; a complete disease treatment dataset is a separate phase.",
+    "sourceIds": ["site-editorial-2026"]
+  }
+]

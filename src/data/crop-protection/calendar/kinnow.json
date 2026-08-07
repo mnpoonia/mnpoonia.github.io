@@ -1,0 +1,4 @@
+[
+  { "id": "kinnow-psyllid-scouting-window", "cropId": "kinnow", "months": [3, 9], "title": "Inspect tender flush for citrus psyllid", "task": "Use the target guide to record susceptible flush, life stage, comparable infested shoots, beneficial insects, and previous applications.", "kind": "monitoring", "sourceIds": ["pau-fruits-2024", "niphm-citrus-2014"], "evidenceStatus": "conditional" },
+  { "id": "kinnow-calendar-gap", "cropId": "kinnow", "months": [1], "title": "Seasonal crop-care calendar pending", "task": "This demonstration record proves calendar rendering. Replace it with reviewed, geography-specific crop-care tasks as sources are added.", "kind": "crop-care", "sourceIds": ["site-editorial-2026"], "evidenceStatus": "demonstration" }
+]

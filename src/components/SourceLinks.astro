@@ -1,0 +1,7 @@
+---
+import { sourceFor } from "../data/crop-protection";
+
+interface Props { sourceIds: string[]; }
+const { sourceIds } = Astro.props;
+---
+<p class="source-links"><strong>Source:</strong> {sourceIds.map((id, index) => <><a href={sourceFor(id).url}>{sourceFor(id).publisher}</a>{index < sourceIds.length - 1 && " · "}</>)}</p>

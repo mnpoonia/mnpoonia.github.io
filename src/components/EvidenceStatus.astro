@@ -1,0 +1,15 @@
+---
+import type { EvidenceStatus } from "../data/crop-protection";
+
+interface Props { status: EvidenceStatus; }
+const labels: Record<EvidenceStatus, string> = {
+  verified: "Source checked",
+  conditional: "Conditions apply",
+  unverified: "Not verified",
+  "research-only": "Research only",
+  demonstration: "Structure demo",
+  "historical-do-not-use": "Historical: do not use",
+};
+const { status } = Astro.props;
+---
+<span class={`badge evidence-${status}`}>{labels[status]}</span>

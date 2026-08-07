@@ -1,7 +1,10 @@
 ---
 import BaseLayout from "../../../layouts/BaseLayout.astro";
 import CropProtectionNav from "../../../components/CropProtectionNav.astro";
-import { cropOrganismOccurrences, crops, organisms, referenceUses, seasonality, sourceFor } from "../../../data/crop-protection";
+import EvidenceStatus from "../../../components/EvidenceStatus.astro";
+import SourceLinks from "../../../components/SourceLinks.astro";
+import UseCard from "../../../components/UseCard.astro";
+import { cropCalendarTasks, cropGuidance, cropOrganismOccurrences, crops, organisms, referenceUses, seasonality } from "../../../data/crop-protection";
 
 export function getStaticPaths() {
   return crops.map((crop) => ({ params: { id: crop.id }, props: { crop } }));
@@ -19,37 +22,59 @@ const targetSections = occurrences.map((occurrence) => ({
   uses: uses.filter((use) => use.organismId === occurrence.organismId),
 }));
 const unmatchedUses = uses.filter((use) => !occurrences.some((occurrence) => occurrence.organismId === use.organismId));
+const guidanceSections = [
+  ["climate", "Climate"], ["soil-and-drainage", "Soil and drainage"], ["varieties", "Varieties"], ["planting", "Planting and establishment"], ["training-and-pruning", "Training and pruning"], ["nutrition", "Nutrition"], ["irrigation", "Irrigation"], ["weed-management", "Weed management"], ["harvest", "Harvest"], ["post-harvest", "Post-harvest"],
+] as const;
+const guidance = cropGuidance.filter((record) => record.cropId === crop.id);
+const calendarTasks = cropCalendarTasks.filter((task) => task.cropId === crop.id);
+const hasRateConflict = (use: typeof uses[number]) => uses.filter((candidate) => candidate.organismId === use.organismId && candidate.formulation === use.formulation).some((candidate) => candidate.dose !== use.dose || candidate.waterVolume !== use.waterVolume);
+const groups = ["insect pest", "mite", "disease", "nutrient disorder", "physiological disorder", "abiotic injury", "weed"] as const;
 ---
 <BaseLayout title={`${crop.name} | Crop Protection Reference`} description={`Monitoring and organism reference for ${crop.name}.`}>
   <CropProtectionNav />
-  <p class="eyebrow">Generated crop reference</p>
-  <h1>{crop.name}</h1>
-  {crop.scientificName && <p class="lede"><em>{crop.scientificName}</em></p>}
+  <header class="crop-reference-header">
+    <p class="eyebrow">Crop reference · Punjab prototype</p>
+    <h1>{crop.name}</h1>
+    {crop.scientificName && <p class="lede"><em>{crop.scientificName}</em></p>}
+    <p>One crop page for practical context and protection decisions. Cultivation sections expand as reviewed records are added; Plant Protection is the most detailed section today.</p>
+    <nav class="crop-section-nav" aria-label={`${crop.name} page sections`}><a href="#this-month">This month</a><a href="#crop-context">Crop context</a><a href="#plant-protection">Plant protection</a><a href="#sources-and-gaps">Sources and gaps</a></nav>
+  </header>
   {crop.id === "kinnow" && <section class="note">
     <strong>PPQS source mapping:</strong> the PPQS major-use table lists this crop category as <strong>Citrus</strong>, not Kinnow. Citrus-sourced entries below are shown for Kinnow as a transparent crop-category mapping and remain conditional until supported by the current product label.
   </section>}
-  <p>Use the linked targets to identify what is affecting the crop, then review the formulation-specific registered-use information below. A dose belongs to a crop, target, and formulation; it is not a universal ingredient rate.</p>
-  <section class="target-directory">
-    <p class="eyebrow">Targets and formulation uses</p>
-    <h2>Find the target before comparing a dose.</h2>
-    <p class="muted">The use information below is organized by target. It is formulation-level evidence, not a product-label authorization or an automatic treatment decision.</p>
-    {targetSections.map((occurrence) => occurrence.organism && <article class="target-card">
+  {guidance.filter((record) => record.section === "at-a-glance").map((record) => <section class="quick-fact"><div><p class="eyebrow">Reference coverage</p><h2>{record.title}</h2><p>{record.summary}</p></div><div><EvidenceStatus status={record.evidenceStatus} /><SourceLinks sourceIds={record.sourceIds} /></div></section>)}
+  <section id="this-month">
+    <p class="eyebrow">This month and seasonal checks</p><h2>Start with field observations, not a calendar spray.</h2>
+    {calendarTasks.length ? <div class="seasonal-task-list">{calendarTasks.map((task) => <article class="seasonal-task"><div><p class="eyebrow">Months {task.months.join(", ")}</p><h3>{task.title}</h3><p>{task.task}</p></div><div><EvidenceStatus status={task.evidenceStatus} /><SourceLinks sourceIds={task.sourceIds} /></div></article>)}</div> : <p class="no-use">No reviewed crop calendar is recorded yet.</p>}
+  </section>
+  <section id="crop-context">
+    <p class="eyebrow">Crop context</p><h2>Practical sections, with evidence boundaries visible.</h2>
+    <div class="guidance-grid">{guidanceSections.map(([section, label]) => {
+      const records = guidance.filter((record) => record.section === section);
+      return <article class="guidance-card"><h3>{label}</h3>{records.length ? records.map((record) => <div class="guidance-record"><h4>{record.title}</h4><p>{record.summary}</p>{record.value && <p><strong>{record.value}</strong></p>}{record.qualifiers.length > 0 && <p class="muted">{record.qualifiers.join(" · ")}</p>}<EvidenceStatus status={record.evidenceStatus} /><SourceLinks sourceIds={record.sourceIds} /></div>) : <p class="muted">No record yet. This section will appear automatically when source-backed data is added.</p>}</article>;
+    })}</div>
+  </section>
+  <section class="target-directory" id="plant-protection">
+    <p class="eyebrow">Plant protection</p>
+    <h2>Identify, inspect, then compare only relevant evidence.</h2>
+    <p class="muted">A dose belongs to a crop, target, and formulation. Formulation references below are not product-label authorization or an automatic treatment decision.</p>
+    {groups.map((group) => {
+      const groupOccurrences = targetSections.filter((occurrence) => occurrence.organism?.type === group);
+      return groupOccurrences.length > 0 && <div class="problem-group"><h3>{group === "insect pest" ? "Insect pests" : `${group[0].toUpperCase()}${group.slice(1)}${group === "mite" ? "s" : ""}`}</h3>{groupOccurrences.map((occurrence) => occurrence.organism && <article class="target-card">
       <div class="target-heading">
         <div><p class="eyebrow">{occurrence.organism.type}</p><h3><a href={`/crop-protection/crops/${crop.id}/targets/${occurrence.organism.id}/`}>{occurrence.organism.name}</a></h3>{occurrence.organism.scientificName && <p><em>{occurrence.organism.scientificName}</em></p>}</div>
-        <span class={occurrence.uses.length > 0 ? "badge conditional" : "badge unverified"}>{occurrence.uses.length > 0 ? `${occurrence.uses.length} use${occurrence.uses.length === 1 ? "" : "s"}` : "monitor"}</span>
+        <span class={occurrence.uses.length > 0 ? "badge conditional" : "badge unverified"}>{occurrence.uses.length > 0 ? `${occurrence.uses.length} reference${occurrence.uses.length === 1 ? "" : "s"}` : "identify and monitor"}</span>
       </div>
       <p>{occurrence.monitoringNote}</p>
-      {occurrence.seasonality.map((record) => <p class="muted">Monitoring priority: {record.monitoringPriority} · Months: {record.months.join(", ")} · Evidence: {record.sourceIds.map((id) => <a href={sourceFor(id).url}>{sourceFor(id).publisher}</a>)}</p>)}
+      {occurrence.seasonality.map((record) => <p class="muted">Monitoring priority: {record.monitoringPriority} · Months: {record.months.join(", ")}</p>)}
       <p class="target-action"><a href={`/crop-protection/crops/${crop.id}/targets/${occurrence.organism.id}/`}>Open target guide and decide the next step</a></p>
       {occurrence.uses.length > 0 ? <div class="use-list">
-        {occurrence.uses.map((use) => <article class="use-card">
-          <div><p class="eyebrow">Formulation</p><h4>{use.formulation}</h4>{use.sourceCrop && <p class="muted">PPQS crop category: {use.sourceCrop}</p>}</div>
-          <dl><div><dt>Dose</dt><dd>{use.dose}</dd></div><div><dt>Water / dilution</dt><dd>{use.waterVolume}</dd></div></dl>
-          <p class="use-note">{use.timing}</p>
-          <p class="use-action"><a href="/crop-protection/products/">Check an exact product label before use</a> · <a href="/crop-protection/sources/">Read source boundary</a></p>
-        </article>)}
+        {occurrence.uses.map((use) => <UseCard use={use} conflict={hasRateConflict(use)} />)}
       </div> : <p class="no-use">No formulation use is currently reviewed for this target. Continue identification and monitoring; absence here is not evidence that no option exists.</p>}
-    </article>)}
-    {unmatchedUses.map((use) => <article class="use-card"><h3>{use.target}</h3><p>{use.formulation} · {use.dose} · {use.waterVolume}</p></article>)}
+    </article>)}</div>;
+    })}
+    {unmatchedUses.map((use) => <UseCard use={use} conflict={hasRateConflict(use)} />)}
+  </section>
+  <section id="sources-and-gaps" class="sources-and-gaps"><p class="eyebrow">Sources and gaps</p><h2>What this page does not claim yet.</h2><p>This page marks cultivation placeholders as structure demonstrations, keeps Citrus-to-Kinnow formulation mappings conditional, and does not invent missing disease, nutrient, weed, threshold, or label information.</p><a class="button secondary" href="/crop-protection/sources/">Read source boundaries</a>
   </section>
 </BaseLayout>

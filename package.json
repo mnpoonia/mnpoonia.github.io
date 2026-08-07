@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "npm run validate && astro build",
+    "build": "npm run validate && astro check && astro build",
     "preview": "astro preview",
     "validate": "tsx scripts/validate-data.ts",
     "import:ppqs-insecticides": "node scripts/import-ppqs-insecticides.mjs",

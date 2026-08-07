@@ -7,5 +7,7 @@
   { "id": "kinnow-oriental-red-mite", "cropId": "kinnow", "organismId": "oriental-red-mite", "monitoringNote": "Inspect both leaf surfaces; reliable identification may need magnification." },
   { "id": "kinnow-oriental-peach-fruit-flies", "cropId": "kinnow", "organismId": "oriental-peach-fruit-flies", "monitoringNote": "Inspect fruit, fallen fruit, and documented traps." },
   { "id": "kinnow-phytophthora-diseases", "cropId": "kinnow", "organismId": "phytophthora-diseases", "monitoringNote": "Inspect root collar, trunk base, basin, and canopy." },
-  { "id": "kinnow-citrus-scab", "cropId": "kinnow", "organismId": "citrus-scab", "monitoringNote": "Inspect leaves, twigs, and fruit for raised rough lesions." }
+  { "id": "kinnow-citrus-scab", "cropId": "kinnow", "organismId": "citrus-scab", "monitoringNote": "Inspect leaves, twigs, and fruit for raised rough lesions." },
+  { "id": "kinnow-nutrient-disorder", "cropId": "kinnow", "organismId": "kinnow-nutrient-disorder", "monitoringNote": "Record whether yellowing starts on new or old leaves; check orchard distribution and root-zone conditions before naming a deficiency." },
+  { "id": "kinnow-orchard-weed-gap", "cropId": "kinnow", "organismId": "kinnow-orchard-weed-gap", "monitoringNote": "Record weed species, crop age, and whether weeds are competing in the basin or only between rows." }
 ]

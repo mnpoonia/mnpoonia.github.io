@@ -1,0 +1,5 @@
+[
+  { "id": "sml-spike-thiamethoxam-25-wg", "brand": "Spike", "manufacturer": "SML Limited", "aliases": ["SML Spike", "Spike 25 WG"], "formulationId": "thiamethoxam-25-wg", "status": "verified", "sourceIds": ["sml-spike", "ppqs-major-uses-2026"], "verifiedCropUses": ["Citrus: psylla, subject to the current container label"] },
+  { "id": "sml-cypro-profenofos-40-cypermethrin-4-ec", "brand": "Cypro", "manufacturer": "SML Limited", "aliases": ["SML Cypro", "Cypro 44 EC"], "formulationId": "profenofos-40-cypermethrin-4-ec", "status": "verified", "sourceIds": ["sml-cypro", "ppqs-major-uses-2026"], "verifiedCropUses": ["Cotton: bollworm complex", "Sugarcane: early shoot borer", "Kinnow use not verified"] },
+  { "id": "pau-imidacloprid-17-8-sl", "brand": "Confidor / Crocodile", "manufacturer": "Brand varies by product", "aliases": ["Imidacloprid 17.8 SL"], "formulationId": "imidacloprid-17-8-sl", "status": "conditional", "sourceIds": ["pau-fruits-2024"], "verifiedCropUses": ["PAU citrus psylla guidance; verify current brand label before use"] }
+]

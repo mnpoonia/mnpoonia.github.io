@@ -1,4 +1,4 @@
-import { compatibility, cropOrganismOccurrences, crops, geographies, imageAssets, ingredients, labelUses, organisms, organismStages, products, recommendationRules, referenceUses, scoutingProtocols, seasonality, sources, thresholds } from "../src/data/crop-protection";
+import { compatibility, cropCalendarTasks, cropGuidance, cropOrganismOccurrences, crops, formulations, geographies, imageAssets, ingredients, labelUses, lookAlikes, managementActions, organisms, organismStages, products, recommendationRules, referenceUses, scoutingProtocols, seasonality, sources, thresholds } from "../src/data/crop-protection";
 import { readPpqsImportRecords, readPpqsReviewCandidates } from "../src/data/crop-protection/ppqs-import";
 
 function assertUnique(values: { id: string }[], label: string) {
@@ -11,12 +11,17 @@ function assertUnique(values: { id: string }[], label: string) {
 
 assertUnique(ingredients, "ingredient");
 assertUnique(products, "product");
+assertUnique(formulations, "formulation");
 assertUnique(sources, "source");
 assertUnique(referenceUses, "reference use");
 assertUnique(crops, "crop");
+assertUnique(cropGuidance, "crop guidance");
+assertUnique(cropCalendarTasks, "crop calendar task");
 assertUnique(organisms, "organism");
 assertUnique(cropOrganismOccurrences, "crop-organism occurrence");
 assertUnique(organismStages, "organism stage");
+assertUnique(lookAlikes, "look-alike");
+assertUnique(managementActions, "management action");
 assertUnique(imageAssets, "image asset");
 assertUnique(geographies, "geography");
 assertUnique(seasonality, "seasonality record");
@@ -37,6 +42,16 @@ const cropIds = new Set(crops.map((item) => item.id));
 const organismIds = new Set(organisms.map((item) => item.id));
 const geographyIds = new Set(geographies.map((item) => item.id));
 const productIds = new Set(products.map((item) => item.id));
+const formulationIds = new Set(formulations.map((item) => item.id));
+for (const record of cropGuidance) {
+  if (!cropIds.has(record.cropId)) throw new Error(`${record.id} references an unknown crop`);
+  if (record.geographyId && !geographyIds.has(record.geographyId)) throw new Error(`${record.id} references an unknown geography`);
+  for (const sourceId of record.sourceIds) if (!sourceIds.has(sourceId)) throw new Error(`${record.id} references an unknown source`);
+}
+for (const task of cropCalendarTasks) {
+  if (!cropIds.has(task.cropId)) throw new Error(`${task.id} references an unknown crop`);
+  for (const sourceId of task.sourceIds) if (!sourceIds.has(sourceId)) throw new Error(`${task.id} references an unknown source`);
+}
 for (const occurrence of cropOrganismOccurrences) {
   if (!cropIds.has(occurrence.cropId)) throw new Error(`${occurrence.id} references an unknown crop`);
   if (!organismIds.has(occurrence.organismId)) throw new Error(`${occurrence.id} references an unknown organism`);
@@ -77,6 +92,14 @@ for (const stage of organismStages) {
     if (!sourceIds.has(sourceId)) throw new Error(`${stage.id} references an unknown source`);
   }
 }
+for (const record of lookAlikes) {
+  if (!cropIds.has(record.cropId) || !organismIds.has(record.organismId)) throw new Error(`${record.id} has an unknown crop or organism`);
+  for (const sourceId of record.sourceIds) if (!sourceIds.has(sourceId)) throw new Error(`${record.id} references an unknown source`);
+}
+for (const action of managementActions) {
+  if (!cropIds.has(action.cropId) || !organismIds.has(action.organismId)) throw new Error(`${action.id} has an unknown crop or organism`);
+  for (const sourceId of action.sourceIds) if (!sourceIds.has(sourceId)) throw new Error(`${action.id} references an unknown source`);
+}
 const stageIds = new Set(organismStages.map((item) => item.id));
 for (const image of imageAssets) {
   if (image.organismId && !organismIds.has(image.organismId)) throw new Error(`${image.id} references an unknown organism`);
@@ -94,15 +117,28 @@ for (const product of products) {
     if (!sourceIds.has(sourceId)) throw new Error(`${product.id} references an unknown source`);
   }
 }
+for (const formulation of formulations) {
+  for (const component of formulation.components) {
+    if (!ingredientIds.has(component.ingredientId)) throw new Error(`${formulation.id} references an unknown ingredient`);
+  }
+}
 
 for (const use of referenceUses) {
   if (!ingredientIds.has(use.ingredientId)) throw new Error(`${use.id} references an unknown ingredient`);
   if (!cropIds.has(use.cropId)) throw new Error(`${use.id} references an unknown crop`);
   if (!organismIds.has(use.organismId)) throw new Error(`${use.id} references an unknown organism`);
+  if (!use.formulationId) throw new Error(`${use.id} needs a stable formulationId`);
+  if (!formulationIds.has(use.formulationId)) throw new Error(`${use.id} references an unknown formulation`);
   if (!use.dose || !use.waterVolume) throw new Error(`${use.id} is missing dose or water volume`);
   for (const sourceId of use.sourceIds) {
     if (!sourceIds.has(sourceId)) throw new Error(`${use.id} references an unknown source`);
   }
 }
 
-console.log(`Validated ${ingredients.length} ingredients, ${products.length} products, ${referenceUses.length} reference uses, and ${sources.length} sources.`);
+const occurrencePaths = new Set(cropOrganismOccurrences.map((occurrence) => `/crop-protection/crops/${occurrence.cropId}/targets/${occurrence.organismId}/`));
+for (const occurrence of cropOrganismOccurrences) {
+  const expectedPath = `/crop-protection/crops/${occurrence.cropId}/targets/${occurrence.organismId}/`;
+  if (!occurrencePaths.has(expectedPath)) throw new Error(`${occurrence.id} has no generated target path`);
+}
+
+console.log(`Validated ${ingredients.length} ingredients, ${formulations.length} formulations, ${products.length} products, ${referenceUses.length} reference uses, ${cropGuidance.length} crop guidance records, and ${sources.length} sources.`);
