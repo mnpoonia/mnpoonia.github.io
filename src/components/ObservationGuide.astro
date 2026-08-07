@@ -1,0 +1,36 @@
+---
+interface Props { cropName: string; targetName: string; targetHref: string; hasUses: boolean; }
+const { cropName, targetName, targetHref, hasUses } = Astro.props;
+---
+<section class="observation-guide" data-observation-guide>
+  <p class="eyebrow">Field observation</p>
+  <h2>What should you do next?</h2>
+  <p>Record what you observed for {cropName} and {targetName}. This guide helps choose the next reference step; it does not tell you to spray.</p>
+  <div class="observation-controls">
+    <label>How certain is the target?<select name="certainty"><option value="uncertain">Not certain</option><option value="likely">Likely</option><option value="confirmed">Confirmed</option></select></label>
+    <label>Observed pressure?<select name="pressure"><option value="unknown">Not counted</option><option value="low">Low / isolated</option><option value="increasing">Increasing</option><option value="high">High / widespread</option></select></label>
+    <label>Applied something recently?<select name="prior"><option value="no">No / not known</option><option value="yes">Yes</option></select></label>
+  </div>
+  <div class="observation-result" aria-live="polite"></div>
+</section>
+<script is:inline define:vars={{ targetHref, hasUses }}>
+  const root = document.querySelector("[data-observation-guide]");
+  const controls = [...root.querySelectorAll("select")];
+  const output = root.querySelector(".observation-result");
+  function render() {
+    const values = Object.fromEntries(controls.map((control) => [control.name, control.value]));
+    if (values.certainty === "uncertain") {
+      output.innerHTML = `<strong>Next: confirm identification.</strong><p>Compare visible symptoms, life stage, crop part, and look-alikes before comparing a formulation use.</p><p><a href="${targetHref}">Open target guide</a></p>`;
+    } else if (values.pressure === "unknown" || values.pressure === "low") {
+      output.innerHTML = `<strong>Next: scout and record.</strong><p>Count comparable plants or shoots and note crop stage. Presence alone does not establish that treatment is needed.</p>`;
+    } else if (values.prior === "yes") {
+      output.innerHTML = `<strong>Next: review the previous application.</strong><p>Record the exact product, formulation, dose, water volume, application date, coverage, rain, and population trend before considering another use.</p>`;
+    } else if (hasUses) {
+      output.innerHTML = `<strong>Next: review formulation uses.</strong><p>Compare only entries for this crop and target, then verify the current exact product label before any application.</p>`;
+    } else {
+      output.innerHTML = `<strong>Next: continue monitoring.</strong><p>This reference has no reviewed formulation use for this crop-target pairing yet. That is not evidence that no option exists.</p>`;
+    }
+  }
+  controls.forEach((control) => control.addEventListener("change", render));
+  render();
+</script>

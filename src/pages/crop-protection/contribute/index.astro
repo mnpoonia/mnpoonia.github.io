@@ -1,0 +1,38 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import CropProtectionNav from "../../../components/CropProtectionNav.astro";
+import { crops } from "../../../data/crop-protection";
+---
+<BaseLayout title="Contribute Reference Data | Crop Protection Reference" description="Create a structured crop-protection reference entry for review.">
+  <CropProtectionNav />
+  <header class="page-intro"><p class="eyebrow">Contributor worksheet</p><h1>Send one source-backed use at a time.</h1><p class="lede">This form does not publish anything. It creates a plain-text record your reviewer can verify against the product label or official source before adding it to the site.</p></header>
+  <section class="contribution-form" data-contribution-form>
+    <div class="contribution-grid">
+      <label>Crop<select name="crop"><option value="">Select crop</option>{crops.map((crop) => <option>{crop.name}</option>)}</select></label>
+      <label>Source crop category (if different)<input name="sourceCrop" placeholder="Example: Citrus" /></label>
+      <label>Target / pest / disease<input name="target" placeholder="Example: Citrus psylla" /></label>
+      <label>Target type<select name="targetType"><option>Insect pest</option><option>Mite</option><option>Disease</option><option>Weed</option><option>Other / unknown</option></select></label>
+      <label>Formulation<input name="formulation" placeholder="Example: Thiamethoxam 25% WG" /></label>
+      <label>Brand / product, if exact label seen<input name="product" placeholder="Optional" /></label>
+      <label>Dose<input name="dose" placeholder="Include unit and area" /></label>
+      <label>Water / dilution<input name="water" placeholder="Include unit" /></label>
+      <label>Waiting period / PHI<input name="phi" placeholder="Optional" /></label>
+      <label>Application method / crop stage<textarea name="method" rows="2" placeholder="Optional, but useful" /></label>
+      <label>Source title and page<label class="hint">Official document, label version, or a clear photo reference</label><textarea name="source" rows="2" /></label>
+      <label>Source URL or file name<textarea name="url" rows="2" /></label>
+      <label class="wide">Notes / uncertainty<textarea name="notes" rows="3" placeholder="What needs review? Do not guess missing values." /></label>
+    </div>
+    <div class="contribution-actions"><button type="button" data-export>Copy structured record</button><a data-email href="mailto:?subject=Crop%20protection%20reference%20entry">Email record</a></div>
+    <pre class="contribution-output" aria-live="polite">Fill the fields to preview a review record.</pre>
+  </section>
+</BaseLayout>
+<script is:inline>
+  const root = document.querySelector("[data-contribution-form]");
+  const fields = [...root.querySelectorAll("input, select, textarea")];
+  const output = root.querySelector(".contribution-output");
+  const email = root.querySelector("[data-email]");
+  function record() { return Object.fromEntries(fields.map((field) => [field.name, field.value.trim()])); }
+  function render() { const data = record(); const text = Object.entries(data).filter(([, value]) => value).map(([key, value]) => `${key}: ${value}`).join("\n") || "Fill the fields to preview a review record."; output.textContent = text; email.href = `mailto:?subject=${encodeURIComponent("Crop protection reference entry")}&body=${encodeURIComponent(text)}`; return text; }
+  fields.forEach((field) => field.addEventListener("input", render));
+  root.querySelector("[data-export]").addEventListener("click", async () => { await navigator.clipboard.writeText(render()); root.querySelector("[data-export]").textContent = "Copied"; });
+</script>

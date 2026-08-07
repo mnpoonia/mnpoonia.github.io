@@ -10,6 +10,7 @@ const isActive = (path: string) => currentPath === path || (path !== "/crop-prot
     <a class={isActive("/crop-protection/crops/") ? "active" : undefined} href="/crop-protection/crops/">Browse crops</a>
     <a class={isActive("/crop-protection/products/") ? "active" : undefined} href="/crop-protection/products/">Find a product</a>
     <a class={isActive("/crop-protection/how-to-use/") ? "active" : undefined} href="/crop-protection/how-to-use/">How to use</a>
+    <a class={isActive("/crop-protection/contribute/") ? "active" : undefined} href="/crop-protection/contribute/">Contribute</a>
     <a class={isActive("/crop-protection/sources/") ? "active" : undefined} href="/crop-protection/sources/">Sources</a>
   </div>
   <label class="crop-nav-select" for="crop-navigation">

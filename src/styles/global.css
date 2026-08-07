@@ -94,6 +94,20 @@ h2 { margin-top: 2.8rem; }
 .flow-map span { color: #b34d22; font: 700 1.1rem system-ui, sans-serif; }
 .flow-map h2 { font-size: 1.1rem; margin: .6rem 0; }
 .flow-map a { font: 700 .84rem system-ui, sans-serif; }
+.breadcrumbs { display: flex; gap: .45rem; flex-wrap: wrap; margin: 2.5rem 0 1rem; color: #5b655e; font: .85rem system-ui, sans-serif; }
+.target-intro { margin-top: 0; }
+.observation-guide { background: #f4eedc; border: 1px solid #dfd1ad; border-radius: .4rem; margin: 2rem 0; padding: 1.35rem; }
+.observation-guide h2 { margin: .2rem 0 .5rem; }
+.observation-controls, .contribution-grid { display: grid; gap: .9rem; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); margin: 1rem 0; }
+.observation-controls label, .contribution-grid label { color: #385146; display: grid; font: 700 .82rem system-ui, sans-serif; gap: .35rem; }
+.observation-controls select, .contribution-grid input, .contribution-grid select, .contribution-grid textarea { border: 1px solid #a7afa0; border-radius: .25rem; background: #fffdf7; color: #183127; font: 400 1rem Georgia, serif; padding: .55rem; }
+.observation-result { background: #fffdf7; border-left: 3px solid #b34d22; margin-top: 1rem; padding: .85rem; }
+.contribution-form { background: #edf2e8; border: 1px solid #c8d5bf; padding: 1.4rem; }
+.contribution-grid .wide { grid-column: 1 / -1; }
+.hint { color: #5b655e; font-weight: 400; }
+.contribution-actions { display: flex; gap: .75rem; flex-wrap: wrap; }
+.contribution-actions button, .contribution-actions a { background: #173d31; border: 0; border-radius: .25rem; color: #fffdf7; font: 700 .85rem system-ui, sans-serif; padding: .7rem .9rem; text-decoration: none; }
+.contribution-output { max-height: 20rem; overflow: auto; background: #fffdf7; border: 1px solid #c8d5bf; margin: 1rem 0 0; padding: 1rem; white-space: pre-wrap; }
 .badge { display: inline-block; padding: .15rem .55rem; border-radius: 999px; font: 700 .75rem/1.4 system-ui, sans-serif; }
 .verified { color: #175c3d; background: #dbeee0; }
 .conditional { color: #874100; background: #fae9c9; }
