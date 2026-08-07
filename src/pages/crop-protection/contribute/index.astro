@@ -62,8 +62,9 @@ const targetOptions = cropOrganismOccurrences.map((occurrence) => {
       </fieldset>
       <label class="wide">Notes / uncertainty<textarea name="notes" rows="3" placeholder="What needs review? Do not guess missing values." /></label>
     </div>
-    <div class="contribution-actions"><button type="button" data-export>Copy structured record</button><a data-email href="mailto:aman.poonia.29@gmail.com?subject=Crop%20protection%20reference%20entry">Open email draft</a></div>
-    <p class="contribution-handoff">On a phone, “Open email draft” uses the device’s configured mail app. If it does not open or the record is long, use “Copy structured record” and paste it into an email to aman.poonia.29@gmail.com.</p>
+    <div class="contribution-actions"><button type="button" data-export>Copy submission for review</button><a class="secondary-action" data-email href="mailto:aman.poonia.29@gmail.com?subject=Crop%20protection%20reference%20entry">Open email draft</a></div>
+    <p class="contribution-handoff">Copy is the reliable handoff on every device. On a phone, “Open email draft” uses the configured mail app; paste the copied record and attach photos or label files before sending to aman.poonia.29@gmail.com.</p>
+    <p class="contribution-status" data-contribution-status aria-live="polite"></p>
     <pre class="contribution-output" aria-live="polite">Fill the fields to preview a review record.</pre>
   </section>
 </BaseLayout>
@@ -91,9 +92,18 @@ const targetOptions = cropOrganismOccurrences.map((occurrence) => {
     manufacturer: "For a new launch, submit the exact product identity and the current approved label or leaflet that names this crop and disease. The record goes to review; it does not publish automatically.",
     expert: "Submit local field guidance with scope, rationale, and limits. It will be attributed and reviewed before publication.",
   };
-  function visibleForRole(field) { const roles = field.dataset.roles; return !roles || roles.split(" ").includes(role.value); }
+  function roleScope(field) { return field.closest("[data-roles]"); }
+  function visibleForRole(field) {
+    const scope = roleScope(field);
+    const roles = scope?.dataset.roles;
+    return !roles || roles.split(" ").includes(role.value);
+  }
   function updateRole() {
-    root.querySelectorAll("[data-roles]").forEach((field) => { field.hidden = !visibleForRole(field); });
+    root.querySelectorAll("[data-roles]").forEach((section) => {
+      const visible = visibleForRole(section);
+      section.hidden = !visible;
+      section.querySelectorAll("input, select, textarea").forEach((control) => { control.disabled = !visible; });
+    });
     roleNote.textContent = roleNotes[role.value];
   }
   function updateTargets() {
@@ -146,16 +156,43 @@ const targetOptions = cropOrganismOccurrences.map((occurrence) => {
     formulationRequest.hidden = true;
   }
   function updateFormulationRequest() { formulationRequest.hidden = !needsFormulation.checked; }
-  function record() { return Object.fromEntries(fields.filter((field) => visibleForRole(field) && field.name).map((field) => [field.name, field.value.trim()])); }
-  function render() {
+  function record() { return Object.fromEntries(fields.filter((field) => !field.disabled && visibleForRole(field) && field.name).map((field) => [field.name, field.value.trim()])); }
+  function missingRequirements(data) {
+    const required = {
+      farmer: [["crop", "crop"], ["geography", "location"], ["observation", "what was observed"]],
+      retailer: [["crop", "crop"], ["target", "target / pest / disease"], ["source", "label or package evidence"]],
+      manufacturer: [["crop", "crop"], ["target", "target / pest / disease"], ["product", "brand / product"], ["labelVersion", "label version or date"], ["source", "approved label or leaflet reference"]],
+      expert: [["crop", "crop"], ["target", "target / pest / disease"], ["expertIdentity", "expert identity"], ["recommendation", "recommendation"], ["fieldBasis", "field basis and rationale"], ["limitations", "limitations and uncertainty"]],
+    };
+    const missing = (required[data.contributorRole] || []).filter(([key]) => !data[key]).map(([, label]) => label);
+    if (["retailer", "manufacturer"].includes(data.contributorRole) && !data.formulationId && !data.needsFormulation) missing.push("known formulation or new formulation request");
+    if (data.contributorRole === "manufacturer" && data.needsFormulation && (!data.newFormulationName || !data.newFormulationComponents || !data.newFormulationEvidence)) missing.push("complete new formulation request");
+    if (data.contributorRole === "expert" && data.recommendationType === "chemical" && (!data.formulationId || !data.source || !data.labelVersion)) missing.push("exact formulation, label evidence, and label version for chemical evidence review");
+    return [...new Set(missing)];
+  }
+  function contributionText() {
     const data = record();
+    const missing = missingRequirements(data);
+    if (missing.length) return { data, missing, text: "" };
     const chemicalWarning = data.contributorRole === "expert" && data.recommendationType === "chemical"
       ? "\n\nREVIEW GATE: Chemical treatment evidence requires the exact current product label. Do not publish a dose, PHI, REI, interval, tank mix, or authorization from expert opinion alone."
       : "";
-    const text = Object.entries(data).filter(([, value]) => value).map(([key, value]) => `${key}: ${value}`).join("\n") || "Fill the fields to preview a review record.";
-    output.textContent = `${text}${chemicalWarning}`;
-    email.href = `mailto:aman.poonia.29@gmail.com?subject=${encodeURIComponent(`${data.contributorRole || "Crop protection"} contribution for review`)}&body=${encodeURIComponent(output.textContent)}`;
-    return output.textContent;
+    const text = Object.entries(data).filter(([, value]) => value).map(([key, value]) => `${key}: ${value}`).join("\n");
+    return { data, missing, text: `${text}${chemicalWarning}` };
+  }
+  const status = root.querySelector("[data-contribution-status]");
+  function render() {
+    const submission = contributionText();
+    if (submission.missing.length) {
+      output.textContent = `Complete these fields before handoff: ${submission.missing.join("; ")}.`;
+      email.removeAttribute("href");
+      email.setAttribute("aria-disabled", "true");
+      return "";
+    }
+    output.textContent = submission.text || "Fill the fields to preview a review record.";
+    email.href = `mailto:aman.poonia.29@gmail.com?subject=${encodeURIComponent(`${submission.data.contributorRole || "Crop protection"} contribution for review`)}&body=${encodeURIComponent(submission.text)}`;
+    email.removeAttribute("aria-disabled");
+    return submission.text;
   }
   role.addEventListener("change", () => { updateRole(); render(); });
   crop.addEventListener("change", () => { updateTargets(); render(); });
@@ -168,5 +205,15 @@ const targetOptions = cropOrganismOccurrences.map((occurrence) => {
   updateTargets();
   updateProduct();
   updateFormulationRequest();
-  root.querySelector("[data-export]").addEventListener("click", async () => { await navigator.clipboard.writeText(render()); root.querySelector("[data-export]").textContent = "Copied"; });
+  root.querySelector("[data-export]").addEventListener("click", async () => {
+    const text = render();
+    if (!text) { status.textContent = "Complete the listed fields before copying a submission."; return; }
+    await navigator.clipboard.writeText(text);
+    status.textContent = "Copied. Paste the record into an email and attach any photos or label files before sending.";
+  });
+  email.addEventListener("click", (event) => {
+    const text = render();
+    if (!text) { event.preventDefault(); status.textContent = "Complete the listed fields before opening an email draft."; return; }
+    status.textContent = "Email draft opened. Attach photos or label files before sending.";
+  });
 </script>

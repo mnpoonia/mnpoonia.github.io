@@ -147,7 +147,10 @@ h2 { margin-top: 2.8rem; }
 .hint { color: #5b655e; font-weight: 400; }
 .contribution-actions { display: flex; gap: .75rem; flex-wrap: wrap; }
 .contribution-actions button, .contribution-actions a { align-items: center; background: #173d31; border: 0; border-radius: .25rem; color: #fffdf7; display: inline-flex; font: 700 .85rem system-ui, sans-serif; min-height: 44px; padding: .7rem .9rem; text-decoration: none; }
+.contribution-actions .secondary-action { background: #fffdf7; border: 1px solid #496555; color: #173d31; }
+.contribution-actions [aria-disabled="true"] { cursor: not-allowed; opacity: .5; }
 .contribution-handoff { color: #5b655e; font: .82rem system-ui, sans-serif; margin: .8rem 0 0; }
+.contribution-status { color: #173d31; font: 700 .82rem system-ui, sans-serif; margin: .8rem 0 0; }
 .contribution-output { max-height: 20rem; overflow: auto; background: #fffdf7; border: 1px solid #c8d5bf; margin: 1rem 0 0; padding: 1rem; white-space: pre-wrap; }
 .badge { display: inline-block; padding: .15rem .55rem; border-radius: 999px; font: 700 .75rem/1.4 system-ui, sans-serif; }
 .verified { color: #175c3d; background: #dbeee0; }
