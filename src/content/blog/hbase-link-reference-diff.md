@@ -2,6 +2,8 @@
 title: What is HFileLink and Reference in HBase?
 published: 2025-04-03T18:44:47+05:30
 description: The distinction between HBase HFileLink and Reference files.
+categories: ["Databases"]
+tags: ["hbase", "storage-engine", "compaction"]
 ---
 
 In HBase there are two things that seem similar but are very different: links and references.

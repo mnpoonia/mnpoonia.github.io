@@ -2,7 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
-const posts = (await getCollection("blog", ({ data }) => !data.draft)).sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
+const posts = (await getCollection("blog", ({ data }) => !data.draft && data.published <= new Date())).sort((a, b) => b.data.published.valueOf() - a.data.published.valueOf());
 ---
 <BaseLayout title="Aman Poonia" description="Technical notes and a crop-protection reference prototype.">
   <p class="eyebrow">Technical writing</p>

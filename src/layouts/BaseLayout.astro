@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { title, description = "A technical blog and crop-protection reference." } = Astro.props;
+const isCropProtection = Astro.url.pathname.startsWith("/crop-protection/");
 ---
 <!doctype html>
 <html lang="en">
@@ -28,8 +29,10 @@ const { title, description = "A technical blog and crop-protection reference." }
       </div>
     </header>
     <main><slot /></main>
-    <footer class="site-footer">
-      Crop-protection content is a traceable reference prototype, not a substitute for the current product label or local agricultural advice.
-    </footer>
+    {isCropProtection && (
+      <footer class="site-footer">
+        Crop-protection content is a traceable reference prototype, not a substitute for the current product label or local agricultural advice.
+      </footer>
+    )}
   </body>
 </html>
