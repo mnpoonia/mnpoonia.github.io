@@ -103,6 +103,7 @@ Use this map to find the right place for a change. Prefer extending normalized d
 | --- | --- | --- |
 | Site shell, global header, footer, or metadata | `src/layouts/BaseLayout.astro` | `src/styles/global.css` |
 | Blog home or post rendering | `src/pages/index.astro` | `src/pages/posts/[...slug].astro` |
+| Blog post frontmatter schema | `src/content.config.ts` | `make_post.py` |
 | Crop-reference landing page | `src/pages/crop-protection/index.astro` | `src/components/CropProtectionNav.astro` |
 | Crop directory | `src/pages/crop-protection/crops/index.astro` | `src/data/crop-protection/crops.json` |
 | Whole-crop page layout | `src/pages/crop-protection/crops/[id].astro` | `src/data/crop-protection/guidance/`, `calendar/`, `occurrences/` |
@@ -187,6 +188,15 @@ The crop pages are data driven. New data should not require a crop-specific page
 10. Run the verification commands above.
 
 Read [`docs/crop-protection-data.md`](docs/crop-protection-data.md) before authoring crop-reference records. It documents evidence states, source boundaries, and the distinction between formulation references and exact product labels.
+
+## Writing A Blog Post
+
+Run `python3 make_post.py "Post Title"` to scaffold a new post in `src/content/blog/` with `draft: true`. Flip `draft` to `false` when ready to publish; `src/pages/index.astro` excludes drafts from the homepage listing but `src/pages/posts/[...slug].astro` still builds their page for direct-link preview.
+
+Frontmatter fields, defined in `src/content.config.ts`:
+
+- **`categories`** — the broad section a post belongs to. Pick one (e.g. `Databases`, `Systems Design`).
+- **`tags`** — specific topics the post covers. Use several (e.g. `hbase`, `caching`, `interview-prep`).
 
 ## Plans And Design Work
 
