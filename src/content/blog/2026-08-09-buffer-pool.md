@@ -2,7 +2,7 @@
 title: What Is a Buffer Pool?
 published: 2026-08-10
 description: ""
-draft: true
+draft: false
 categories: ["Databases"]
 tags: ["buffer pool", "caching"]
 ---
